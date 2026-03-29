@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.*;
 
 @Getter
-public class AbstractEntityDTO {
+public class AbstractEntityDTO implements Descritivo {
     UUID id;
     String descritivo;
 

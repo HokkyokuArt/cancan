@@ -1,6 +1,7 @@
 package com.articos.cancan.domain.usuario;
 
 import com.articos.cancan.common.*;
+import com.articos.cancan.domain.usuario.dto.*;
 import com.articos.cancan.security.jwt.role.*;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +10,7 @@ import lombok.*;
 @Table(name = "USUARIO")
 @Getter
 @Setter
-public class Usuario extends SuperEntity {
+public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO, AbstractEntityDTO> {
 
     @Column(nullable = false, length = 100)
     private String nome;
@@ -28,7 +29,7 @@ public class Usuario extends SuperEntity {
         super();
     }
 
-    public Usuario(SuperPaylodResponeDTO dto) {
+    public Usuario(SuperPayloadResponseDTO dto) {
         super(dto);
     }
 
@@ -38,7 +39,17 @@ public class Usuario extends SuperEntity {
     }
 
     @Override
-    public Object toDTO() {
+    public UsuarioResponseDTO toDTO() {
         return null;
+    }
+
+    @Override
+    public AbstractEntityDTO toListDTO() {
+        return null;
+    }
+
+    @Override
+    public void setValues(UsuarioResponseDTO usuarioResponseDTO) {
+
     }
 }

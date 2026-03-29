@@ -8,7 +8,8 @@ import java.util.*;
 @MappedSuperclass
 @Getter
 @NoArgsConstructor
-public abstract class SuperEntity<DTO> implements DtoConvertible<DTO>, Descritivo {
+@EqualsAndHashCode(of = "id")
+public abstract class SuperEntity<PAYLOAD_DTO, RESPONSE_DTO, LIST_DTO> implements DtoConvertible<PAYLOAD_DTO, RESPONSE_DTO, LIST_DTO>, Descritivo {
     @Id
     private UUID id;
 
@@ -16,9 +17,11 @@ public abstract class SuperEntity<DTO> implements DtoConvertible<DTO>, Descritiv
     @Column(nullable = false)
     private Integer version;
 
-    public SuperEntity(SuperPaylodResponeDTO dto) {
-        this.id = dto.getId();
-        this.version = dto.getVersion();
+    public SuperEntity(SuperPayloadResponseDTO dto) {
+        if (dto.getId() != null) {
+            this.id = dto.getId();
+            this.version = dto.getVersion();
+        }
     }
 
     @PrePersist

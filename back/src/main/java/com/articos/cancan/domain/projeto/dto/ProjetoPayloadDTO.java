@@ -2,6 +2,7 @@ package com.articos.cancan.domain.projeto.dto;
 
 import com.articos.cancan.common.*;
 import com.articos.cancan.domain.projeto.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.*;
@@ -9,11 +10,14 @@ import java.util.stream.*;
 
 @NoArgsConstructor
 @Getter
-public class ProjetoPayloadDTO extends SuperPaylodResponeDTO<Projeto> {
+public class ProjetoPayloadDTO extends SuperPayloadResponseDTO<Projeto> {
+    @NotEmpty
     private String nome;
+    @NotEmpty
     private String descricao;
+    @NotNull
     private UUID dono;
-    private Set<UUID> membros;
+    private Set<UUID> membros = new HashSet<>();
 
     public ProjetoPayloadDTO(Projeto projeto) {
         super(projeto);
@@ -27,6 +31,6 @@ public class ProjetoPayloadDTO extends SuperPaylodResponeDTO<Projeto> {
 
     @Override
     public Projeto toEntity() {
-        return null;
+        return new Projeto(this);
     }
 }

@@ -1,7 +1,8 @@
 package com.articos.cancan.common;
 
 import lombok.*;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.*;
 import org.springframework.transaction.annotation.*;
 
 import java.util.*;
@@ -10,7 +11,11 @@ import java.util.stream.*;
 
 @RequiredArgsConstructor
 public abstract class SuperService<T extends SuperEntity> {
-    protected final JpaRepository<T, UUID> repository;
+    protected final SuperRepository<T> repository;
+
+    public Page<T> list(Specification<T> spec, Pageable pageable) {
+        return repository.findAll(spec, pageable);
+    }
 
     public T load(UUID id) {
         Optional<T> opt = repository.findById(id);
@@ -34,5 +39,11 @@ public abstract class SuperService<T extends SuperEntity> {
     @Transactional
     public T save(T entity) {
         return repository.save(entity);
+    }
+
+    @Transactional
+    public T delete(T entity) {
+        repository.delete(entity);
+        return entity;
     }
 }

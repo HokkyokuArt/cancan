@@ -13,7 +13,8 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Projeto extends SuperEntity<ProjetoPayloadDTO> {
+@EqualsAndHashCode(of = {"nome"}, callSuper = false)
+public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, AbstractEntityDTO> {
     @Column(nullable = false, length = 100)
     private String nome;
 
@@ -32,8 +33,11 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO> {
     )
     private Set<Usuario> membros = new HashSet<>();
 
-    public Projeto(ProjetoPayloadDTO dto, Usuario dono, Set<Usuario> membros) {
+    public Projeto(ProjetoPayloadDTO dto) {
         super(dto);
+    }
+
+    public void setValues(ProjetoPayloadDTO dto, Usuario dono, Set<Usuario> membros) {
         this.nome = dto.getNome();
         this.descricao = dto.getDescricao();
         this.dono = dono;
@@ -41,8 +45,18 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO> {
     }
 
     @Override
+    public void setValues(ProjetoPayloadDTO o) {
+    }
+
+    @Override
     public ProjetoPayloadDTO toDTO() {
         return new ProjetoPayloadDTO(this);
+    }
+
+
+    @Override
+    public AbstractEntityDTO toListDTO() {
+        return new AbstractEntityDTO(this);
     }
 
     @Override

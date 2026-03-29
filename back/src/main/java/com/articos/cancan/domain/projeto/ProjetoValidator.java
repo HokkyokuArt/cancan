@@ -3,6 +3,6 @@ package com.articos.cancan.domain.projeto;
 import com.articos.cancan.common.*;
 import org.springframework.stereotype.*;
 
-@Repository
-public interface ProjetoRepository extends SuperRepository<Projeto> {
+@Component
+public class ProjetoValidator extends SuperValidator<Projeto> {
 }
