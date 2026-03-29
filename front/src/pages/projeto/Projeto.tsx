@@ -1,49 +1,44 @@
 import { Button } from '@mui/material';
 import { useState } from 'react';
-import useRequestService from '../../common/services/useRequestService';
-import type { ProjetoPayloadDTO } from './projeto.model';
+import useSuperRequests from '../../common/services/useSuperRequests';
+import { Pageable, Sort } from '../../common/types/pageable';
 import { useAppSelector } from '../../redux/store';
+import type { ProjetoPayloadDTO } from './projeto.model';
+import type { AbstractEntityDTO } from '../../common/types/abstractEntity';
 
 
 const Projeto = () => {
 
-    const { post, get } = useRequestService();
+    const { find, create, pageable } = useSuperRequests<ProjetoPayloadDTO, AbstractEntityDTO>({ url: '/projeto' });
     const { id: dono } = useAppSelector(s => s.tokenState);
 
     const [abc, setAbc] = useState<ProjetoPayloadDTO | null>(null);
 
-    const create = () => {
+    const handleCreate = () => {
         const body: ProjetoPayloadDTO = {
             nome: 'Projeto teste abc',
             descricao: 'Eu sla oq q ta acontencendo só quero dormir ahhhhhhhhhhhhhh',
             dono: dono!,
             membros: []
         };
-        post<ProjetoPayloadDTO>({
-            url: '/projeto/create',
-            body,
-            then: res => {
-                console.log('create =>', { res });
-                setAbc(res);
-            }
-        });
+
+        create(body);
     };
 
-    const find = () => {
-        get<ProjetoPayloadDTO>({
-            url: '/projeto/find/aa52ae33-8b8c-425a-ab6d-1e9066297287',
-            then: res => {
-                console.log('find =>', { res });
-                setAbc(res);
-            }
-        });
+    const handleFind = () => {
+        find('aa52ae33-8b8c-425a-ab6d-1e9066297287');
+    };
+
+    const handleList = () => {
+        pageable({ nome: 'abc' }, Pageable.of({ page: 0, size: 10, sort: Sort.ofField('nome') }));
     };
 
     return (
         <>
             <h1>Projeto</h1>
-            <Button onClick={create}>Create</Button>
-            <Button onClick={find}>Find</Button>
+            <Button onClick={handleCreate}>Create</Button>
+            <Button onClick={handleFind}>Find</Button>
+            <Button onClick={handleList}>List</Button>
         </>
     );
 };

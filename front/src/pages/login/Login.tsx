@@ -10,7 +10,7 @@ import CustomInput from "../../components/CustomInput";
 const Login = () => {
     const { logar } = useAuthService();
     const [localState, setLocalState] = useState({ showPassword: false });
-    const [loginState, setLoginState] = useState<LoginPayload>({ email: 'eu@email', senha: '13241324' });
+    const [loginState, setLoginState] = useState<LoginPayload>({ email: 'admin@admin', senha: '13241324' });
 
     const handleClickLogin = () => {
         logar(loginState);

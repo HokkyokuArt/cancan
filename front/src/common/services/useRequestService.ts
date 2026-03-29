@@ -73,23 +73,23 @@ const useRequestService = () => {
   };
 
   return {
-    get: <T>(param: RequestBaseParams<T>): void => {
+    getRequest: <T>(param: RequestBaseParams<T>): void => {
       _makeRequest(param, RequestType.GET);
     },
 
-    post: <T>(param: RequestBodyParams<T>): void => {
+    postRequest: <T>(param: RequestBodyParams<T>): void => {
       _makeRequest(param, RequestType.POST);
     },
 
-    put: <T>(param: RequestBodyParams<T>): void => {
+    putRequest: <T>(param: RequestBodyParams<T>): void => {
       _makeRequest(param, RequestType.PUT);
     },
 
-    patch: <T>(param: RequestBodyParams<T>): void => {
+    patchRequest: <T>(param: RequestBodyParams<T>): void => {
       _makeRequest(param, RequestType.PATCH);
     },
 
-    delete: <T>(param: RequestBodyParams<T>): void => {
+    deleteRequest: <T>(param: RequestBodyParams<T>): void => {
       _makeRequest(param, RequestType.DELETE);
     },
   };

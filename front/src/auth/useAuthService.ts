@@ -11,14 +11,14 @@ import type {
 } from "./auth.model";
 
 const useAuthService = () => {
-  const { post } = useRequestService();
+  const { postRequest } = useRequestService();
   const dispatch = useAppDispatch();
   const navigate = useCustomNavigate();
   const _path = "/auth";
 
   return {
     logar(payload: LoginPayload) {
-      post<TokenResponse>({
+      postRequest<TokenResponse>({
         url: `${_path}/logar`,
         body: payload,
         then: (res) => {
@@ -36,7 +36,7 @@ const useAuthService = () => {
     },
 
     register(payload: RegisterPayload) {
-      post<UUID>({
+      postRequest<UUID>({
         url: `${_path}/register`,
         body: payload,
         then: (res) => {
