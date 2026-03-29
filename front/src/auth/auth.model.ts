@@ -8,5 +8,11 @@ export type RegisterPayload = LoginPayload & {
 };
 
 export type TokenResponse = {
-  token: string;
+  token: string | null;
+  role: Role | null;
 };
+
+export enum Role {
+  ROLE_ADMIN = "ROLE_ADMIN",
+  ROLE_MEMBER = "ROLE_MEMBER",
+}

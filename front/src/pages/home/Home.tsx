@@ -1,11 +1,9 @@
 import { Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router";
+import useCustomNavigate from "../../common/hooks/useCustomNavigate";
 import { RouterURL } from "../../routes";
 
 const Home = () => {
-
-    const navigate = useNavigate();
-
+    const navigate = useCustomNavigate();
     return (
         <>
             <Typography variant="h1">Home</Typography>

@@ -1,6 +1,7 @@
 package com.articos.cancan.domain.usuario;
 
 import com.articos.cancan.common.*;
+import com.articos.cancan.security.jwt.role.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,4 +19,8 @@ public class Usuario extends SuperEntity {
 
     @Column(nullable = false, length = 255)
     private String senha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.ROLE_MEMBER;
 }

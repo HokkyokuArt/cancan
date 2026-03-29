@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 
+import java.util.*;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -37,7 +39,13 @@ public class AuthService {
                 )
         );
 
-        String token = jwtService.generateToken(request.email());
-        return new TokenResponse(token);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(request.email());
+        if (usuarioOpt.isEmpty()) {
+            throw new RuntimeException("usuario não encontrado");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        String token = jwtService.generateToken(usuario.getEmail());
+        return new TokenResponse(token, usuario.getRole());
     }
 }

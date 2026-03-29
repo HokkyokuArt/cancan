@@ -4,6 +4,7 @@ import {
   type AxiosResponse,
 } from "axios";
 import { axiosRequest } from "../../axios.config";
+import { useAppSelector } from "../../redux/store";
 
 export type ThenCallBack<T> = (response: T) => void;
 
@@ -29,6 +30,8 @@ export enum RequestType {
 }
 
 const useRequestService = () => {
+  const token = useAppSelector((s) => s.tokenState.token);
+
   const _makeRequest = <T>(
     params: RequestBodyParams<T>,
     requestType: RequestType,
@@ -60,6 +63,9 @@ const useRequestService = () => {
     params: RequestBodyParams<T>,
   ): AxiosRequestConfig => {
     const headers = new AxiosHeaders();
+    if (!!token) {
+      headers.setAuthorization(`Bearer ${token}`);
+    }
     return {
       headers,
       params: params.params,

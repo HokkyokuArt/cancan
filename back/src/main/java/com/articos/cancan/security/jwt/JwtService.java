@@ -25,13 +25,13 @@ public class JwtService {
         this.expirationSeconds = expirationSeconds;
     }
 
-    public String generateToken(String subject) {
+    public String generateToken(String email) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("cancan")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expirationSeconds))
-                .subject(subject)
+                .subject(email)
                 .build();
 
         JwsHeader header = JwsHeader.with(() -> "HS256").build();

@@ -2,9 +2,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Box, Button, IconButton, InputAdornment } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import type { RegisterPayload } from "../../auth/auth.model";
 import useAuthService from "../../auth/useAuthService";
+import useCustomNavigate from '../../common/hooks/useCustomNavigate';
 import BaseLayoutAuthForm from '../../components/BaseLayoutAuthForm';
 import CustomInput from "../../components/CustomInput";
 import { RouterURL } from "../../routes";
@@ -12,7 +12,7 @@ import { RouterURL } from "../../routes";
 const Register = () => {
 
     const { register } = useAuthService();
-    const navigate = useNavigate();
+    const navigate = useCustomNavigate();
 
     const [localState, setLocalState] = useState({ showPassword: false });
 

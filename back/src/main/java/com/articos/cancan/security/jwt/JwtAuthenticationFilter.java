@@ -1,27 +1,22 @@
 package com.articos.cancan.security.jwt;
 
-import com.articos.cancan.security.jwt.*;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.stereotype.*;
+import org.springframework.web.filter.*;
 
-import java.io.IOException;
+import java.io.*;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(

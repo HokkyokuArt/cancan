@@ -1,20 +1,16 @@
 import { Visibility } from "@mui/icons-material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Box, Button, IconButton, InputAdornment } from "@mui/material";
+import { Button, IconButton, InputAdornment } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import type { LoginPayload } from "../../auth/auth.model";
 import useAuthService from "../../auth/useAuthService";
 import BaseLayoutAuthForm from "../../components/BaseLayoutAuthForm";
 import CustomInput from "../../components/CustomInput";
-import { RouterURL } from "../../routes";
 
 const Login = () => {
-
-    const navigate = useNavigate();
     const { logar } = useAuthService();
     const [localState, setLocalState] = useState({ showPassword: false });
-    const [loginState, setLoginState] = useState<LoginPayload>({ email: '', senha: '' });
+    const [loginState, setLoginState] = useState<LoginPayload>({ email: 'eu@email', senha: '13241324' });
 
     const handleClickLogin = () => {
         logar(loginState);
@@ -24,11 +20,12 @@ const Login = () => {
         title='Login'
         onSubmit={handleClickLogin}
     >
-        <CustomInput label="Email" type="email" onChange={v => setLoginState(s => ({ ...s, email: v }))} />
+        <CustomInput label="Email" type="email" value={loginState.email} onChange={v => setLoginState(s => ({ ...s, email: v }))} />
         <CustomInput
             label="Senha"
             helperText={'teste'}
             type={localState.showPassword ? "text" : 'password'}
+            value={loginState.senha}
             onChange={v => setLoginState(s => ({ ...s, senha: v }))}
             slotProps={{
                 input: {
@@ -44,7 +41,7 @@ const Login = () => {
         />
 
         <Button type='submit'>Logar</Button>
-        <Button onClick={() => navigate(RouterURL.REGISTER)}>Ainda não tem uma conta?<Box paddingX={1}>Criar</Box></Button>
+        {/* <Button onClick={() => navigate(RouterURL.REGISTER)}>Ainda não tem uma conta?<Box paddingX={1}>Criar</Box></Button> */}
     </BaseLayoutAuthForm>;
 };
 

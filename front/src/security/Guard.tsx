@@ -1,12 +1,14 @@
 import type { JSX } from "react";
 import { Navigate, Outlet } from "react-router";
+import { useAppSelector } from "../redux/store";
 
 interface Props {
     children?: JSX.Element;
 };
 
 const Guard = ({ children }: Props) => {
-    const isAuthenticated = true;
+    const { token } = useAppSelector(s => s.tokenState);
+    const isAuthenticated = !!token;
     if (!isAuthenticated) {
         return (
             <Navigate to={'/login'}></Navigate>

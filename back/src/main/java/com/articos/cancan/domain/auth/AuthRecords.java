@@ -1,5 +1,6 @@
 package com.articos.cancan.domain.auth;
 
+import com.articos.cancan.security.jwt.role.*;
 import jakarta.validation.constraints.*;
 
 public class AuthRecords {
@@ -14,7 +15,8 @@ public class AuthRecords {
     }
 
     public record TokenResponse(
-            String token
+            String token,
+            Role role
     ) {
     }
 
