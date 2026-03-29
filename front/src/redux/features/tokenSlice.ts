@@ -5,6 +5,7 @@ import type { TokenResponse } from "./../../auth/auth.model";
 const initialState: TokenResponse = {
   token: null,
   role: null,
+  id: null,
 };
 
 const tokenSlice = createSlice({

@@ -23,7 +23,7 @@ const useAuthService = () => {
         body: payload,
         then: (res) => {
           dispatch(setToken(res));
-          navigate([RouterURL.PAINEL, RouterURL.INICIO]);
+          navigate([RouterURL.PAINEL, RouterURL.PROJETO]);
         },
         catch: (err) => {
           console.log(err.body);

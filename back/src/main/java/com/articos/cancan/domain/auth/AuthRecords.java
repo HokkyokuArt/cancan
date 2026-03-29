@@ -1,7 +1,10 @@
 package com.articos.cancan.domain.auth;
 
+import com.articos.cancan.domain.usuario.*;
 import com.articos.cancan.security.jwt.role.*;
 import jakarta.validation.constraints.*;
+
+import java.util.*;
 
 public class AuthRecords {
     public record LoginPayload(
@@ -16,8 +19,13 @@ public class AuthRecords {
 
     public record TokenResponse(
             String token,
-            Role role
+            Role role,
+            UUID id
     ) {
+
+        public TokenResponse(String token, Usuario usuario) {
+            this(token, usuario.getRole(), usuario.getId());
+        }
     }
 
     public record RegisterPayload(

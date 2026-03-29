@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "USUARIO")
 @Getter
 @Setter
 public class Usuario extends SuperEntity {
@@ -23,4 +23,22 @@ public class Usuario extends SuperEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.ROLE_MEMBER;
+
+    public Usuario() {
+        super();
+    }
+
+    public Usuario(SuperPaylodResponeDTO dto) {
+        super(dto);
+    }
+
+    @Override
+    public String getDescritivo() {
+        return this.nome;
+    }
+
+    @Override
+    public Object toDTO() {
+        return null;
+    }
 }

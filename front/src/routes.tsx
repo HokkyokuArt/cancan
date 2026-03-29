@@ -5,13 +5,15 @@ import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
 import Guard from "./security/Guard";
 import ProtectedRoute from "./security/ProtectedRoute";
+import Projeto from "./pages/projeto/Projeto";
 
 export enum RouterURL {
   HOME = 'home',
   LOGIN = 'login',
   REGISTER = 'register',
   PAINEL = 'painel',
-  INICIO = 'inicio'
+  INICIO = 'inicio',
+  PROJETO = 'projeto'
 }
 
 export const router = createBrowserRouter([
@@ -32,6 +34,13 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute allowedRole={Role.ROLE_MEMBER} />,
         children: [
           { path: RouterURL.INICIO, element: <Inicio />, }
+        ]
+      },
+
+      {
+        element: <ProtectedRoute allowedRole={Role.ROLE_MEMBER} />,
+        children: [
+          { path: RouterURL.PROJETO, element: <Projeto />, }
         ]
       },
     ]
