@@ -12,14 +12,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public abstract class SuperRestController<
         ENTIDADE extends SuperEntity<PAYLOAD_DTO, RESPONSE_DTO, LIST_RESPONSE_DTO>,
-        PAYLOAD_DTO extends SuperPayloadResponseDTO<ENTIDADE>,
-        RESPONSE_DTO extends SuperPayloadResponseDTO<ENTIDADE>,
+        PAYLOAD_DTO extends SuperPayloadDTO<ENTIDADE>,
+        RESPONSE_DTO extends SuperResponseDTO<ENTIDADE>,
         FILTRO extends Filtro<ENTIDADE>,
         LIST_RESPONSE_DTO extends AbstractEntityDTO
         > {
 
-    private final SuperService<ENTIDADE> service;
-    private final SuperValidator<ENTIDADE> validator;
+    protected final SuperService<ENTIDADE> service;
+    protected final SuperValidator<ENTIDADE> validator;
 
     @MemberAccess
     @PostMapping("pageable")
@@ -51,7 +51,7 @@ public abstract class SuperRestController<
     @MemberAccess
     @PutMapping("update")
     public ResponseEntity<RESPONSE_DTO> update(@RequestBody @Valid PAYLOAD_DTO dto) throws Exception {
-        ENTIDADE entity = service.loadWithExcption(dto.getId());
+        ENTIDADE entity = service.loadWithExcption(dto.getId()); // jogar pra dentro do service pra não precisar do load?
         updateValues(entity, dto);
         validator.validate(entity);
         ENTIDADE saved = service.save(entity);

@@ -29,7 +29,7 @@ public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO,
         super();
     }
 
-    public Usuario(SuperPayloadResponseDTO dto) {
+    public Usuario(SuperPayloadDTO dto) {
         super(dto);
     }
 

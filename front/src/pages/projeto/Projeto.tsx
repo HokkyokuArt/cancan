@@ -1,15 +1,15 @@
 import { Button } from '@mui/material';
 import { useState } from 'react';
 import useSuperRequests from '../../common/services/useSuperRequests';
+import type { AbstractEntityDTO } from '../../common/types/abstractEntity';
 import { Pageable, Sort } from '../../common/types/pageable';
 import { useAppSelector } from '../../redux/store';
-import type { ProjetoPayloadDTO } from './projeto.model';
-import type { AbstractEntityDTO } from '../../common/types/abstractEntity';
+import type { ProjetoFiltroDTO, ProjetoPayloadDTO } from './projeto.model';
 
 
 const Projeto = () => {
 
-    const { find, create, pageable } = useSuperRequests<ProjetoPayloadDTO, AbstractEntityDTO>({ url: '/projeto' });
+    const { find, create, pageable } = useSuperRequests<ProjetoPayloadDTO, AbstractEntityDTO, ProjetoFiltroDTO>({ url: '/projeto' });
     const { id: dono } = useAppSelector(s => s.tokenState);
 
     const [abc, setAbc] = useState<ProjetoPayloadDTO | null>(null);
@@ -17,6 +17,7 @@ const Projeto = () => {
     const handleCreate = () => {
         const body: ProjetoPayloadDTO = {
             nome: 'Projeto teste abc',
+            sigla: 'PRJ',
             descricao: 'Eu sla oq q ta acontencendo só quero dormir ahhhhhhhhhhhhhh',
             dono: dono!,
             membros: []
@@ -26,7 +27,7 @@ const Projeto = () => {
     };
 
     const handleFind = () => {
-        find('aa52ae33-8b8c-425a-ab6d-1e9066297287');
+        find('531655d8-1d05-49a9-8c46-489e67326da6');
     };
 
     const handleList = () => {

@@ -16,7 +16,7 @@ import java.util.*;
 public class AuthRestController {
     private final AuthService authService;
 
-    @AdminOnly
+//    @AdminOnly
     @PostMapping("/register")
     public ResponseEntity<UUID> register(@RequestBody @Valid RegisterPayload request) {
         Usuario user = authService.register(request);

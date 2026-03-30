@@ -6,11 +6,11 @@ import java.util.*;
 
 @Getter
 @NoArgsConstructor
-public abstract class SuperPayloadResponseDTO<T extends SuperEntity> implements EntityConvertible<T> {
+public abstract class SuperResponseDTO<T extends SuperEntity> {
     private UUID id;
     private Integer version;
 
-    public SuperPayloadResponseDTO(T entity) {
+    public SuperResponseDTO(T entity) {
         this.id = entity.getId();
         this.version = entity.getVersion();
     }

@@ -17,13 +17,16 @@ import java.time.*;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"codigo"}, callSuper = false)
-public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaPayloadDTO, AbstractEntityDTO> {
+public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, AbstractEntityDTO> {
 
     @Column(nullable = false, length = 300)
     private String titulo;
 
     @Column(nullable = false, length = 10)
     private String codigo;
+
+    @Column(nullable = false)
+    private Integer sequencial;
 
     @Column(nullable = false, length = 1000)
     private String descricao;
@@ -34,7 +37,7 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaPayloadDTO, Abst
 
     @Convert(converter = PrioridadeTarefaAttributeConverter.class)
     @Column(nullable = false, length = 1)
-    private PrioridadeTarefa prioridadeTarefa;
+    private PrioridadeTarefa prioridade;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "RESPONSAVEL_FK", nullable = false)
@@ -44,11 +47,34 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaPayloadDTO, Abst
     @JoinColumn(name = "PROJETO_FK", nullable = false)
     private Projeto projeto;
 
-    @Column(name = "DATA_CRIACAO", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    @Column(name = "ULTIMA_ATUALIZACAO", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime ultimaAtualizacao;
+
+    @Column(nullable = false)
+    private LocalDate prazo;
+
+    public Tarefa(TarefaPayloadDTO dto) {
+        super(dto);
+    }
+
+    @Override
+    public void setValues(TarefaPayloadDTO dto) {
+    }
+
+    public void setValues(TarefaPayloadDTO dto, Usuario responsavel, Projeto projeto, Integer proximoNumero) {
+        this.titulo = dto.getTitulo();
+        this.sequencial = proximoNumero;
+        this.codigo = String.format("%s-%s", projeto.getSigla(), proximoNumero);
+        this.descricao = dto.getDescricao();
+        this.status = dto.getStatus();
+        this.prioridade = dto.getPrioridade();
+        this.responsavel = responsavel;
+        this.projeto = projeto;
+        this.prazo = dto.getPrazo();
+    }
 
     @Override
     public void prePersist() {
@@ -65,20 +91,8 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaPayloadDTO, Abst
 
     @Override
     public String getDescritivo() {
-        return null;
+        return String.format("%s - %s", this.codigo, this.titulo);
     }
 
-    @Override
-    public void setValues(TarefaPayloadDTO tarefaPayloadDTO) {
-    }
 
-    @Override
-    public TarefaPayloadDTO toDTO() {
-        return null;
-    }
-
-    @Override
-    public AbstractEntityDTO toListDTO() {
-        return null;
-    }
 }

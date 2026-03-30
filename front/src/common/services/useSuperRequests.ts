@@ -13,13 +13,14 @@ type Props = {
 const useSuperRequests = <
   RESPONSE_DTO extends SuperPayloadResponseDTO,
   LIST_RESPONSE_DTO extends AbstractEntityDTO,
+  FILTRO_DTO extends Filter,
 >(
   props: Props,
 ) => {
   const { getRequest, postRequest, putRequest, deleteRequest } =
     useRequestService();
   return {
-    pageable(filter: Filter, pageable: Pageable) {
+    pageable(filter: FILTRO_DTO, pageable: Pageable) {
       postRequest<Page<LIST_RESPONSE_DTO>>({
         url: props.url + "/pageable",
         then: (res) => {

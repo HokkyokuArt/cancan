@@ -10,7 +10,7 @@ import java.util.stream.*;
 
 @NoArgsConstructor
 @Getter
-public class ProjetoPayloadDTO extends SuperPayloadResponseDTO<Projeto> {
+public class ProjetoPayloadDTO extends SuperPayloadDTO<Projeto> {
     @NotEmpty
     private String nome;
     @NotEmpty

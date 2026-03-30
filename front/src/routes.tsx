@@ -3,9 +3,11 @@ import { Role } from "./auth/auth.model";
 import Home from "./pages/home/Home";
 import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
+import Projeto from "./pages/projeto/Projeto";
+import Register from "./pages/register/Register";
+import Tarefa from "./pages/tarefa/Tarefa";
 import Guard from "./security/Guard";
 import ProtectedRoute from "./security/ProtectedRoute";
-import Projeto from "./pages/projeto/Projeto";
 
 export enum RouterURL {
   HOME = 'home',
@@ -13,7 +15,8 @@ export enum RouterURL {
   REGISTER = 'register',
   PAINEL = 'painel',
   INICIO = 'inicio',
-  PROJETO = 'projeto'
+  PROJETO = 'projeto',
+  TAREFA = 'tarefa',
 }
 
 export const router = createBrowserRouter([
@@ -43,6 +46,13 @@ export const router = createBrowserRouter([
           { path: RouterURL.PROJETO, element: <Projeto />, }
         ]
       },
+
+      {
+        element: <ProtectedRoute allowedRole={Role.ROLE_MEMBER} />,
+        children: [
+          { path: RouterURL.TAREFA, element: <Tarefa />, }
+        ]
+      },
     ]
   },
 
@@ -57,5 +67,5 @@ export const router = createBrowserRouter([
   },
   { path: RouterURL.HOME, element: <Home /> },
   { path: RouterURL.LOGIN, element: <Login /> },
-  // { path: RouterURL.REGISTER, element: <Register /> },
+  { path: RouterURL.REGISTER, element: <Register /> },
 ]);

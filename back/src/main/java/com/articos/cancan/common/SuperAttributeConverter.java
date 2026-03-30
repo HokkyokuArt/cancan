@@ -1,6 +1,6 @@
 package com.articos.cancan.common;
 
-import com.articos.cancan.*;
+import com.articos.cancan.utils.*;
 import jakarta.persistence.*;
 
 public class SuperAttributeConverter<T extends Enum<T> & EnumAttributeConverterDescritivo> implements AttributeConverter<T, String> {

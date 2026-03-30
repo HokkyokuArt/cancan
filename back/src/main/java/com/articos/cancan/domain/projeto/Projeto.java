@@ -41,6 +41,10 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, A
         super(dto);
     }
 
+    @Override
+    public void setValues(ProjetoPayloadDTO o) {
+    }
+
     public void setValues(ProjetoPayloadDTO dto, Usuario dono, Set<Usuario> membros) {
         this.nome = dto.getNome();
         this.sigla = dto.getSigla();
@@ -51,21 +55,6 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, A
 
     public void initialize() {
         Hibernate.initialize(this.membros);
-    }
-
-    @Override
-    public void setValues(ProjetoPayloadDTO o) {
-    }
-
-    @Override
-    public ProjetoPayloadDTO toDTO() {
-        return new ProjetoPayloadDTO(this);
-    }
-
-
-    @Override
-    public AbstractEntityDTO toListDTO() {
-        return new AbstractEntityDTO(this);
     }
 
     @Override
