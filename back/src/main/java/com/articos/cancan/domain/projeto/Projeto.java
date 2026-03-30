@@ -5,7 +5,6 @@ import com.articos.cancan.domain.projeto.dto.*;
 import com.articos.cancan.domain.usuario.*;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.*;
 
 import java.util.*;
 
@@ -51,10 +50,6 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, A
         this.descricao = dto.getDescricao();
         this.dono = dono;
         this.membros = membros;
-    }
-
-    public void initialize() {
-        Hibernate.initialize(this.membros);
     }
 
     @Override
