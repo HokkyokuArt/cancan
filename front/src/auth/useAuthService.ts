@@ -23,7 +23,7 @@ const useAuthService = () => {
         body: payload,
         then: (res) => {
           dispatch(setToken(res));
-          navigate([RouterURL.PAINEL, RouterURL.TAREFA]);
+          navigate([RouterURL.PAINEL, RouterURL.INICIO]);
         },
         catch: (err) => {
           console.log(err.body);
@@ -33,6 +33,7 @@ const useAuthService = () => {
 
     deslogar() {
       dispatch(resetToken());
+      navigate([RouterURL.PAINEL, RouterURL.LOGIN]);
     },
 
     register(payload: RegisterPayload) {

@@ -33,7 +33,7 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Abs
 
     @Convert(converter = StatusTarefaAttributeConverter.class)
     @Column(nullable = false, length = 1)
-    private StatusTarefa status;
+    private StatusTarefa status = StatusTarefa.TODO;
 
     @Convert(converter = PrioridadeTarefaAttributeConverter.class)
     @Column(nullable = false, length = 1)
@@ -69,7 +69,9 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Abs
         this.sequencial = proximoNumero;
         this.codigo = String.format("%s-%s", projeto.getSigla(), proximoNumero);
         this.descricao = dto.getDescricao();
-        this.status = dto.getStatus();
+        if (dto.getId() != null) {
+            this.status = dto.getStatus();
+        }
         this.prioridade = dto.getPrioridade();
         this.responsavel = responsavel;
         this.projeto = projeto;

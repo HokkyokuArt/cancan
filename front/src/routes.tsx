@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { Role } from "./auth/auth.model";
+import BaseLayout from "./components/BaseLayout";
 import Home from "./pages/home/Home";
 import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
@@ -22,7 +23,7 @@ export enum RouterURL {
 export const router = createBrowserRouter([
   {
     path: RouterURL.PAINEL,
-    element: <Guard />,
+    element: <Guard><BaseLayout /></Guard>,
     children: [
       {
         path: '',

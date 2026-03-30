@@ -19,7 +19,7 @@ public abstract class SuperRestController<
         > {
 
     protected final SuperService<ENTIDADE> service;
-    protected final SuperValidator<ENTIDADE> validator;
+    protected final SuperValidator<ENTIDADE, PAYLOAD_DTO> validator;
 
     @MemberAccess
     @PostMapping("pageable")
@@ -42,7 +42,7 @@ public abstract class SuperRestController<
     public ResponseEntity<RESPONSE_DTO> create(@RequestBody @Valid PAYLOAD_DTO dto) throws Exception {
         ENTIDADE entity = dto.toEntity();
         updateValues(entity, dto);
-        validator.validate(entity);
+        validator.validateCreate(entity, dto);
         ENTIDADE saved = service.save(entity);
         RESPONSE_DTO toReturn = saved.toDTO();
         return new ResponseEntity<>(toReturn, HttpStatus.CREATED);
@@ -52,8 +52,8 @@ public abstract class SuperRestController<
     @PutMapping("update")
     public ResponseEntity<RESPONSE_DTO> update(@RequestBody @Valid PAYLOAD_DTO dto) throws Exception {
         ENTIDADE entity = service.loadWithExcption(dto.getId()); // jogar pra dentro do service pra não precisar do load?
+        validator.validateUpdate(entity, dto);
         updateValues(entity, dto);
-        validator.validate(entity);
         ENTIDADE saved = service.save(entity);
         RESPONSE_DTO toReturn = saved.toDTO();
         return new ResponseEntity<>(toReturn, HttpStatus.CREATED);

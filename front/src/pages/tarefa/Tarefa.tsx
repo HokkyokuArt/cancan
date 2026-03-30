@@ -6,7 +6,7 @@ import { Pageable, Sort } from '../../common/types/pageable';
 
 
 const Tarefa = () => {
-    const { find, create, pageable } = useSuperRequests<TarefaResponseDTO, AbstractEntityDTO, TarefaFiltroDTO>({ url: '/tarefa' });
+    const { find, create, pageable, update } = useSuperRequests<TarefaResponseDTO, AbstractEntityDTO, TarefaFiltroDTO>({ url: '/tarefa' });
 
     const handleCreate = () => {
         const body: TarefaPayloadDTO = {
@@ -14,16 +14,32 @@ const Tarefa = () => {
             descricao: 'Descricao teste sla',
             status: 'TODO',
             prioridade: 'LOW',
-            responsavel: 'c8382357-8434-4e5c-a27c-53033900c632',
-            projeto: 'a9e1441c-a144-4c4a-8a57-f384dcd10471',
+            responsavel: 'bc25d22b-758f-45c6-95e1-36ab2a5429ff',
+            projeto: 'a5f5d1ab-9c2b-4fd5-b24a-e0d1b440286e',
             prazo: new Date(),
         };
 
         create(body);
     };
 
+    const handleUpdate = () => {
+        const body: TarefaPayloadDTO = {
+            id: "5cd021cf-e1d6-415b-817c-cec25c840eb3",
+            version: 1,
+            titulo: 'Tarefa com titulo',
+            descricao: 'Descricao teste sla',
+            status: 'TODO',
+            prioridade: 'LOW',
+            responsavel: 'bc25d22b-758f-45c6-95e1-36ab2a5429ff',
+            projeto: 'a5f5d1ab-9c2b-4fd5-b24a-e0d1b440286e',
+            prazo: new Date(),
+        };
+
+        update(body);
+    };
+
     const handleFind = () => {
-        find('10735cc8-b8ab-4e89-a706-54785f247e67');
+        find("5cd021cf-e1d6-415b-817c-cec25c840eb3");
     };
 
     const handleList = () => {
@@ -34,6 +50,7 @@ const Tarefa = () => {
         <>
             <h1>Tarefa</h1>
             <Button onClick={handleCreate}>Create</Button>
+            <Button onClick={handleUpdate}>Update</Button>
             <Button onClick={handleFind}>Find</Button>
             <Button onClick={handleList}>List</Button>
         </>

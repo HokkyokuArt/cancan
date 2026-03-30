@@ -12,4 +12,16 @@ public enum StatusTarefa implements EnumAttributeConverterDescritivo {
 
     private final String codigo;
     private final String descritivo;
+
+    public boolean isTodo() {
+        return TODO.equals(this);
+    }
+
+    public boolean isInProgress() {
+        return IN_PROGRESS.equals(this);
+    }
+
+    public boolean isDone() {
+        return DONE.equals(this);
+    }
 }
