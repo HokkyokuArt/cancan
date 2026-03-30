@@ -19,7 +19,12 @@ public abstract class SuperService<T extends SuperEntity> {
 
     public T load(UUID id) {
         Optional<T> opt = repository.findById(id);
-        return opt.orElse(null);
+        T toReturn = null;
+        if (opt.isPresent()) {
+            toReturn = opt.get();
+            toReturn.initialize();
+        }
+        return toReturn;
     }
 
     public Map<UUID, T> findAll(Set<UUID> ids) {
@@ -33,7 +38,9 @@ public abstract class SuperService<T extends SuperEntity> {
         if (opt.isEmpty()) {
             throw new RuntimeException("entidade não encontrada");
         }
-        return opt.get();
+        T toReturn = opt.get();
+        toReturn.initialize();
+        return toReturn;
     }
 
     @Transactional

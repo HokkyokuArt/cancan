@@ -14,6 +14,8 @@ public class ProjetoPayloadDTO extends SuperPayloadResponseDTO<Projeto> {
     @NotEmpty
     private String nome;
     @NotEmpty
+    private String sigla;
+    @NotEmpty
     private String descricao;
     @NotNull
     private UUID dono;
@@ -22,6 +24,7 @@ public class ProjetoPayloadDTO extends SuperPayloadResponseDTO<Projeto> {
     public ProjetoPayloadDTO(Projeto projeto) {
         super(projeto);
         this.nome = projeto.getNome();
+        this.sigla = projeto.getSigla();
         this.descricao = projeto.getDescricao();
         this.dono = projeto.getDono().getId();
         this.membros = projeto.getMembros().stream()

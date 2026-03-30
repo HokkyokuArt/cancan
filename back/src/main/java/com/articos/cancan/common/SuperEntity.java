@@ -30,4 +30,7 @@ public abstract class SuperEntity<PAYLOAD_DTO, RESPONSE_DTO, LIST_DTO> implement
             id = UUID.randomUUID();
         }
     }
+
+    public void initialize() {
+    }
 }

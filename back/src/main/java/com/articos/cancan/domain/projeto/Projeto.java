@@ -5,6 +5,7 @@ import com.articos.cancan.domain.projeto.dto.*;
 import com.articos.cancan.domain.usuario.*;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.*;
 
 import java.util.*;
 
@@ -18,10 +19,13 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, A
     @Column(nullable = false, length = 100)
     private String nome;
 
+    @Column(nullable = false, length = 3)
+    private String sigla;
+
     @Column(nullable = false, length = 500)
     private String descricao;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "DONO_FK", nullable = false)
     private Usuario dono;
 
@@ -39,9 +43,14 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, A
 
     public void setValues(ProjetoPayloadDTO dto, Usuario dono, Set<Usuario> membros) {
         this.nome = dto.getNome();
+        this.sigla = dto.getSigla();
         this.descricao = dto.getDescricao();
         this.dono = dono;
         this.membros = membros;
+    }
+
+    public void initialize() {
+        Hibernate.initialize(this.membros);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO,
     @Column(nullable = false, length = 255)
     private String senha;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = RoleAttributeConverter.class)
     @Column(nullable = false)
     private Role role = Role.ROLE_MEMBER;
 
