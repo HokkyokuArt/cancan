@@ -1,5 +1,7 @@
 package com.articos.cancan.common;
 
+import com.articos.cancan.common.crud.*;
+import com.articos.cancan.common.interfaces.*;
 import lombok.*;
 
 import java.util.*;

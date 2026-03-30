@@ -1,5 +1,6 @@
-package com.articos.cancan.common;
+package com.articos.cancan.common.crud;
 
+import com.articos.cancan.common.interfaces.*;
 import lombok.*;
 
 @NoArgsConstructor

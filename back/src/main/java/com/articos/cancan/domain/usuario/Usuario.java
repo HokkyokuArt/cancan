@@ -1,6 +1,7 @@
 package com.articos.cancan.domain.usuario;
 
 import com.articos.cancan.common.*;
+import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.usuario.dto.*;
 import com.articos.cancan.security.jwt.role.*;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.articos.cancan.common;
+package com.articos.cancan.common.crud;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.*;

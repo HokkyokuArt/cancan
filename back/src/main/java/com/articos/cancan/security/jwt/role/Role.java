@@ -1,7 +1,7 @@
 package com.articos.cancan.security.jwt.role;
 
 
-import com.articos.cancan.common.*;
+import com.articos.cancan.common.interfaces.*;
 import lombok.*;
 
 @RequiredArgsConstructor

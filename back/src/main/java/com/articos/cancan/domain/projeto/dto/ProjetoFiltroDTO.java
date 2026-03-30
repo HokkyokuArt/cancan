@@ -1,6 +1,6 @@
 package com.articos.cancan.domain.projeto.dto;
 
-import com.articos.cancan.common.*;
+import com.articos.cancan.common.interfaces.*;
 import com.articos.cancan.domain.projeto.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;

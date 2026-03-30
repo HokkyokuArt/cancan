@@ -1,9 +1,10 @@
 package com.articos.cancan.common;
 
+import com.articos.cancan.common.interfaces.*;
 import com.articos.cancan.utils.*;
 import jakarta.persistence.*;
 
-public class SuperAttributeConverter<T extends Enum<T> & EnumAttributeConverterDescritivo> implements AttributeConverter<T, String> {
+public abstract class SuperAttributeConverter<T extends Enum<T> & EnumAttributeConverterDescritivo> implements AttributeConverter<T, String> {
 
     @Override
     public String convertToDatabaseColumn(T attribute) {

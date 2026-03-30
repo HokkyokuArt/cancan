@@ -1,6 +1,6 @@
 package com.articos.cancan.domain.tarefa.statustarefa;
 
-import com.articos.cancan.common.*;
+import com.articos.cancan.common.interfaces.*;
 import lombok.*;
 
 @RequiredArgsConstructor

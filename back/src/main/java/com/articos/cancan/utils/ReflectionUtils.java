@@ -1,6 +1,6 @@
 package com.articos.cancan.utils;
 
-import com.articos.cancan.common.*;
+import com.articos.cancan.common.interfaces.*;
 import io.github.classgraph.*;
 import org.apache.commons.lang3.*;
 

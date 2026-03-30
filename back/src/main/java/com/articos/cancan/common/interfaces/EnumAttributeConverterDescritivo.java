@@ -1,4 +1,4 @@
-package com.articos.cancan.common;
+package com.articos.cancan.common.interfaces;
 
 public interface EnumAttributeConverterDescritivo extends Descritivo {
     String getCodigo();

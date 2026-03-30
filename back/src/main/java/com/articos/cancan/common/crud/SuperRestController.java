@@ -1,5 +1,7 @@
-package com.articos.cancan.common;
+package com.articos.cancan.common.crud;
 
+import com.articos.cancan.common.*;
+import com.articos.cancan.common.interfaces.*;
 import com.articos.cancan.security.jwt.role.*;
 import jakarta.validation.*;
 import lombok.*;

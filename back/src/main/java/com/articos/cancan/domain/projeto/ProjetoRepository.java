@@ -1,6 +1,6 @@
 package com.articos.cancan.domain.projeto;
 
-import com.articos.cancan.common.*;
+import com.articos.cancan.common.crud.*;
 import org.springframework.stereotype.*;
 
 @Repository

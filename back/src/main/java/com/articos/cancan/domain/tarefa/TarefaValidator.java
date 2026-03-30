@@ -1,6 +1,6 @@
 package com.articos.cancan.domain.tarefa;
 
-import com.articos.cancan.common.*;
+import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.tarefa.dto.*;
 import com.articos.cancan.domain.tarefa.statustarefa.*;
 import com.articos.cancan.domain.usuario.*;
