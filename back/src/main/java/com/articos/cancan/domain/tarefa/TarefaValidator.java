@@ -16,11 +16,11 @@ import java.util.*;
 public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
 
     private final TarefaRepository repository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     protected void validateCreate(Tarefa entity, TarefaPayloadDTO dto) throws Exception {
         validateResponsavelNaoEstaNoProjeto(entity);
-        validateFecharTarefaPrioridadeCritical(entity, dto);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
     }
 
     private static void validateResponsavelNaoEstaNoProjeto(Tarefa entity) {
-//        if (usuarioLogadoEhDonoDoProjeto(entity.getProjeto().getDono().getId()))
-//            return;
+        if (usuarioLogadoEhDonoDoProjeto(entity.getProjeto().getDono().getId()))
+            return;
         boolean responsavelNaoEstaNoProjeto = !entity.getProjeto().getMembros().contains(entity.getResponsavel());
         if (responsavelNaoEstaNoProjeto) {
             throw new RuntimeException();
@@ -46,11 +46,11 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         }
     }
 
-    private static void validateFecharTarefaPrioridadeCritical(Tarefa entity, TarefaPayloadDTO dto) {
+    private void validateFecharTarefaPrioridadeCritical(Tarefa entity, TarefaPayloadDTO dto) {
         boolean prioridadeCritical = entity.getPrioridade().isCritical();
-        boolean isDono = usuarioLogadoEhDonoDoProjeto(entity.getProjeto().getDono().getId());
+        Usuario usuario = usuarioRepository.findById(usuarioLogado()).orElseThrow(RuntimeException::new);
         boolean isMovendoPraDone = dto.getStatus().isDone();
-        if (!isDono && prioridadeCritical && isMovendoPraDone) {
+        if (usuario.getRole().isMember() && prioridadeCritical && isMovendoPraDone) {
             throw new RuntimeException();
         }
     }
@@ -67,8 +67,11 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
     }
 
     private static boolean usuarioLogadoEhDonoDoProjeto(UUID donoProjeto) {
+        return donoProjeto.equals(usuarioLogado());
+    }
+
+    private static UUID usuarioLogado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID usuarioAtual = UUID.fromString(authentication.getName());
-        return donoProjeto.equals(usuarioAtual);
+        return UUID.fromString(authentication.getName());
     }
 }
