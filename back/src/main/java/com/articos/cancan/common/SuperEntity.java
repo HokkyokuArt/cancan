@@ -37,9 +37,6 @@ public abstract class SuperEntity<
         }
     }
 
-    public void initialize() {
-    }
-
     @SneakyThrows
     @Override
     public RESPONSE_DTO toDTO() {

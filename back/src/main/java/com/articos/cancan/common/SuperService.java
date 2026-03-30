@@ -17,20 +17,14 @@ public abstract class SuperService<T extends SuperEntity> {
         return repository.findAll(spec, pageable);
     }
 
-    public T load(UUID id) {
-        Optional<T> opt = repository.findById(id);
-        T toReturn = null;
-        if (opt.isPresent()) {
-            toReturn = opt.get();
-            toReturn.initialize();
-        }
-        return toReturn;
-    }
-
     public Map<UUID, T> findAll(Set<UUID> ids) {
         return repository.findAllById(ids)
                 .stream()
                 .collect(Collectors.toMap(SuperEntity::getId, Function.identity()));
+    }
+
+    public T load(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 
     public T loadWithExcption(UUID id) throws RuntimeException {
@@ -38,9 +32,7 @@ public abstract class SuperService<T extends SuperEntity> {
         if (opt.isEmpty()) {
             throw new RuntimeException("entidade não encontrada");
         }
-        T toReturn = opt.get();
-        toReturn.initialize();
-        return toReturn;
+        return opt.get();
     }
 
     @Transactional

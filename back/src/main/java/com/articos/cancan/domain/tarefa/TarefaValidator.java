@@ -2,6 +2,8 @@ package com.articos.cancan.domain.tarefa;
 
 import com.articos.cancan.common.*;
 import com.articos.cancan.domain.tarefa.dto.*;
+import com.articos.cancan.domain.tarefa.statustarefa.*;
+import com.articos.cancan.domain.usuario.*;
 import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
@@ -12,6 +14,8 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
+
+    private final TarefaRepository repository;
 
     @Override
     protected void validateCreate(Tarefa entity, TarefaPayloadDTO dto) throws Exception {
@@ -24,6 +28,7 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         validateResponsavelNaoEstaNoProjeto(entity);
         validateMoverTarefa(entity, dto);
         validateFecharTarefaPrioridadeCritical(entity, dto);
+        validateAtingiuMaximoTarefasInProgress(entity, dto);
     }
 
     private static void validateResponsavelNaoEstaNoProjeto(Tarefa entity) {
@@ -47,6 +52,17 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         boolean isMovendoPraDone = dto.getStatus().isDone();
         if (!isDono && prioridadeCritical && isMovendoPraDone) {
             throw new RuntimeException();
+        }
+    }
+
+    private void validateAtingiuMaximoTarefasInProgress(Tarefa entity, TarefaPayloadDTO dto) {
+        Usuario responsavel = entity.getResponsavel();
+        StatusTarefa status = dto.getStatus();
+        if (status.isInProgress()) {
+            long quantidade = repository.countByResponsavelIdAndStatus(responsavel.getId(), status);
+            if (quantidade >= 5) {
+                throw new RuntimeException();
+            }
         }
     }
 
