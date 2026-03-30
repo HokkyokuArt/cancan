@@ -1,6 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import useCustomNavigate from "../../common/hooks/useCustomNavigate";
-import { RouterURL } from "../../routes";
+import { RouterURL } from "../../common/types/routerUrl";
 
 const Home = () => {
     const navigate = useCustomNavigate();

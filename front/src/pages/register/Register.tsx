@@ -5,9 +5,9 @@ import { useState } from "react";
 import type { RegisterPayload } from "../../auth/auth.model";
 import useAuthService from "../../auth/useAuthService";
 import useCustomNavigate from '../../common/hooks/useCustomNavigate';
-import BaseLayoutAuthForm from '../../components/BaseLayoutAuthForm';
+import { RouterURL } from '../../common/types/routerUrl';
 import CustomInput from "../../components/CustomInput";
-import { RouterURL } from "../../routes";
+import BaseLayoutAuthForm from '../../layout/BaseLayoutAuthForm';
 
 const Register = () => {
 

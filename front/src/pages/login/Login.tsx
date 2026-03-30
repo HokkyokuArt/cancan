@@ -4,8 +4,8 @@ import { Button, IconButton, InputAdornment } from "@mui/material";
 import { useState } from "react";
 import type { LoginPayload } from "../../auth/auth.model";
 import useAuthService from "../../auth/useAuthService";
-import BaseLayoutAuthForm from "../../components/BaseLayoutAuthForm";
 import CustomInput from "../../components/CustomInput";
+import BaseLayoutAuthForm from "../../layout/BaseLayoutAuthForm";
 
 const Login = () => {
     const { logar } = useAuthService();

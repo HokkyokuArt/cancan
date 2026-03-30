@@ -1,8 +1,8 @@
 import useCustomNavigate from "../common/hooks/useCustomNavigate";
 import useRequestService from "../common/services/useRequestService";
+import { RouterURL } from "../common/types/routerUrl";
 import type { UUID } from "../common/types/uuid";
 import { resetToken, setToken } from "../redux/features/tokenSlice";
-import { RouterURL } from "../routes";
 import { useAppDispatch } from "./../redux/store";
 import type {
   LoginPayload,

@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { Role } from "./auth/auth.model";
-import BaseLayout from "./components/BaseLayout";
+import { RouterURL } from "./common/types/routerUrl";
+import BaseLayout from "./layout/BaseLayout";
 import Home from "./pages/home/Home";
 import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
@@ -9,16 +10,6 @@ import Register from "./pages/register/Register";
 import Tarefa from "./pages/tarefa/Tarefa";
 import Guard from "./security/Guard";
 import ProtectedRoute from "./security/ProtectedRoute";
-
-export enum RouterURL {
-  HOME = 'home',
-  LOGIN = 'login',
-  REGISTER = 'register',
-  PAINEL = 'painel',
-  INICIO = 'inicio',
-  PROJETO = 'projeto',
-  TAREFA = 'tarefa',
-}
 
 export const router = createBrowserRouter([
   {

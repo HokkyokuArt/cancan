@@ -18,7 +18,6 @@ const BaseLayoutAuthForm = (props: Props) => {
         }} >
             <form style={{
                 width: '400px',
-                // background: 'red',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',

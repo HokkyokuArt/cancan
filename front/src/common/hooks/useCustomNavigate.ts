@@ -1,5 +1,5 @@
 import { useNavigate, type NavigateOptions } from "react-router";
-import type { RouterURL } from "../../routes";
+import type { RouterURL } from "../types/routerUrl";
 
 const useCustomNavigate = () => {
   const navigate = useNavigate();
