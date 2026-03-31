@@ -1,5 +1,6 @@
 package com.articos.cancan.security;
 
+import com.articos.cancan.common.exceptions.core.*;
 import com.articos.cancan.domain.usuario.*;
 import lombok.*;
 import org.springframework.security.core.authority.*;
@@ -17,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(Usuario.class, "validar token"));
         return new User(
                 usuario.getId().toString(),
                 usuario.getSenha(),

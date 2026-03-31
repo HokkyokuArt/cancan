@@ -34,37 +34,37 @@ public abstract class SuperRestController<
     @MemberAccess
     @GetMapping("find/{id}")
     public ResponseEntity<RESPONSE_DTO> find(@PathVariable UUID id) {
-        ENTIDADE entity = service.loadWithExcption(id);
+        ENTIDADE entity = service.loadWithException(id, "buscar");
         RESPONSE_DTO toReturn = entity.toDTO();
         return ResponseEntity.ok(toReturn);
     }
 
     @MemberAccess
     @PostMapping("create")
-    public ResponseEntity<RESPONSE_DTO> create(@RequestBody @Valid PAYLOAD_DTO dto) throws Exception {
+    public ResponseEntity<RESPONSE_DTO> create(@RequestBody @Valid PAYLOAD_DTO dto) {
         ENTIDADE entity = dto.toEntity();
         updateValues(entity, dto);
         validator.validateCreate(entity, dto);
         ENTIDADE saved = service.save(entity);
         RESPONSE_DTO toReturn = saved.toDTO();
-        return new ResponseEntity<>(toReturn, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toReturn);
     }
 
     @MemberAccess
     @PutMapping("update")
-    public ResponseEntity<RESPONSE_DTO> update(@RequestBody @Valid PAYLOAD_DTO dto) throws Exception {
-        ENTIDADE entity = service.loadWithExcption(dto.getId()); // jogar pra dentro do service pra não precisar do load?
+    public ResponseEntity<RESPONSE_DTO> update(@RequestBody @Valid PAYLOAD_DTO dto) {
+        ENTIDADE entity = service.loadWithException(dto.getId(), "editar");
         validator.validateUpdate(entity, dto);
         updateValues(entity, dto);
         ENTIDADE saved = service.save(entity);
         RESPONSE_DTO toReturn = saved.toDTO();
-        return new ResponseEntity<>(toReturn, HttpStatus.CREATED);
+        return ResponseEntity.ok(toReturn);
     }
 
     @MemberAccess
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<RESPONSE_DTO> delete(@PathVariable UUID id) throws Exception {
-        ENTIDADE entity = service.loadWithExcption(id);
+    public ResponseEntity<RESPONSE_DTO> delete(@PathVariable UUID id) {
+        ENTIDADE entity = service.loadWithException(id, "excluir");
         validator.validateExcluir(entity);
         ENTIDADE deleted = service.delete(entity);
         RESPONSE_DTO toReturn = deleted.toDTO();

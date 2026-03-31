@@ -1,5 +1,6 @@
 package com.articos.cancan.domain.auth;
 
+import com.articos.cancan.common.exceptions.core.*;
 import com.articos.cancan.domain.auth.AuthRecords.*;
 import com.articos.cancan.domain.usuario.*;
 import com.articos.cancan.security.jwt.*;
@@ -22,7 +23,7 @@ public class AuthService {
     @Transactional
     public Usuario register(RegisterPayload request) {
         if (usuarioRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Já existe usuário com esse email");
+            throw new DuplicidadeException("Email já cadastrado");
         }
         Usuario usuario = new Usuario();
         usuario.setNome(request.nome());
@@ -41,7 +42,7 @@ public class AuthService {
 
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(request.email());
         if (usuarioOpt.isEmpty()) {
-            throw new RuntimeException("usuario não encontrado");
+            throw new EntidadeNaoEncontradaException(Usuario.class, "logar");
         }
 
         Usuario usuario = usuarioOpt.get();

@@ -14,14 +14,17 @@ public class ReflectionUtils {
         return (Class<?>) ((ParameterizedType) superClass).getActualTypeArguments()[index];
     }
 
-    public static <T, D> D newInstance(T origem, Class<D> destinoClass) throws InvocationTargetException, InstantiationException,
-            IllegalAccessException {
+    public static <T, D> D newInstance(T origem, Class<D> destinoClass) {
         Class<?> origemClass = origem.getClass();
         for (Constructor<?> constructor : destinoClass.getConstructors()) {
             Class<?>[] params = constructor.getParameterTypes();
             if (params.length == 1 && params[0].isAssignableFrom(origemClass)) {
                 Constructor<D> ctor = (Constructor<D>) constructor;
-                return ctor.newInstance(origem);
+                try {
+                    return ctor.newInstance(origem);
+                } catch (Exception e) {
+                    return null;
+                }
             }
         }
         return null;
@@ -56,29 +59,34 @@ public class ReflectionUtils {
         return (Class<? extends Enum<?>>) toReturn;
     }
 
-    public static Map<String, Object> getOneEnum(Enum<?> enumConstant) throws NoSuchMethodException, InvocationTargetException,
-            IllegalAccessException {
-        Map<String, Object> toReturn = new HashMap<>();
-        Class<?> declaringClass = enumConstant.getDeclaringClass();
-        List<Field> fields =
-                Arrays.stream(declaringClass.getDeclaredFields()).filter(f -> !f.isEnumConstant() && !Modifier.isStatic(f.getModifiers()) && f.getType().equals(String.class)).toList();
-        toReturn.put("name", enumConstant.name());
-        if (Descritivo.class.isAssignableFrom(declaringClass)) {
-            toReturn.put("descritivo", ((Descritivo) enumConstant).getDescritivo());
+    public static Map<String, Object> getOneEnum(Enum<?> enumConstant) {
+        try {
+            Map<String, Object> toReturn = new HashMap<>();
+            Class<?> declaringClass = enumConstant.getDeclaringClass();
+            List<Field> fields =
+                    Arrays.stream(declaringClass.getDeclaredFields()).filter(f -> !f.isEnumConstant() && !Modifier.isStatic(f.getModifiers()) && f.getType().equals(String.class)).toList();
+            toReturn.put("name", enumConstant.name());
+            if (Descritivo.class.isAssignableFrom(declaringClass)) {
+                toReturn.put("descritivo", ((Descritivo) enumConstant).getDescritivo());
+            }
+            for (Field field : fields) {
+                String fieldName = field.getName();
+                Object invoke = declaringClass.getMethod("get" + StringUtils.capitalize(fieldName)).invoke(enumConstant);
+                toReturn.put(fieldName, invoke == null ? invoke : invoke.toString().isEmpty() ? null : invoke);
+            }
+            return toReturn;
+        } catch (Exception e) {
+            return null;
         }
-        for (Field field : fields) {
-            String fieldName = field.getName();
-            Object invoke = declaringClass.getMethod("get" + StringUtils.capitalize(fieldName)).invoke(enumConstant);
-            toReturn.put(fieldName, invoke == null ? invoke : invoke.toString().isEmpty() ? null : invoke);
-        }
-        return toReturn;
     }
 
-    public static List<Map<String, Object>> getEnumFull(Class<? extends Enum<?>> enumClass) throws InvocationTargetException, NoSuchMethodException
-            , IllegalAccessException {
+    public static List<Map<String, Object>> getEnumFull(Class<? extends Enum<?>> enumClass) {
         List<Map<String, Object>> toReturn = new ArrayList<>();
         for (Enum<?> enumConstant : enumClass.getEnumConstants()) {
-            toReturn.add(getOneEnum(enumConstant));
+            Map<String, Object> oneEnum = getOneEnum(enumConstant);
+            if (oneEnum != null) {
+                toReturn.add(oneEnum);
+            }
         }
         return toReturn;
     }

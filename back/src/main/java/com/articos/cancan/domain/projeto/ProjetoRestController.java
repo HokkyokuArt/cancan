@@ -5,7 +5,6 @@ import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.dto.*;
 import com.articos.cancan.domain.usuario.*;
 import com.articos.cancan.security.jwt.role.*;
-import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,42 +33,28 @@ public class ProjetoRestController extends SuperRestController<
 
     @AdminOnly
     @Override
-    @PostMapping("pageable")
-    public ResponseEntity<Page<AbstractEntityDTO>> pageable(ProjetoFiltroDTO filtro, Pageable pageable) {
-        return super.pageable(filtro, pageable);
-    }
-
-    @AdminOnly
-    @Override
-    @GetMapping("find/{id}")
-    public ResponseEntity<ProjetoPayloadDTO> find(UUID id) {
-        return super.find(id);
-    }
-
-    @AdminOnly
-    @Override
     @PostMapping("create")
-    public ResponseEntity<ProjetoPayloadDTO> create(ProjetoPayloadDTO dto) throws Exception {
+    public ResponseEntity<ProjetoPayloadDTO> create(ProjetoPayloadDTO dto) {
         return super.create(dto);
     }
 
     @AdminOnly
     @Override
     @PutMapping("update")
-    public ResponseEntity<ProjetoPayloadDTO> update(ProjetoPayloadDTO dto) throws Exception {
+    public ResponseEntity<ProjetoPayloadDTO> update(ProjetoPayloadDTO dto) {
         return super.update(dto);
     }
 
     @AdminOnly
     @Override
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<ProjetoPayloadDTO> delete(UUID id) throws Exception {
+    public ResponseEntity<ProjetoPayloadDTO> delete(UUID id) {
         return super.delete(id);
     }
 
     @Override
     protected void updateValues(Projeto entity, ProjetoPayloadDTO dto) {
-        Usuario dono = usuarioService.loadWithExcption(dto.getDono());
+        Usuario dono = usuarioService.loadWithException(dto.getDono(), "buscar dono");
         Collection<Usuario> values = usuarioService.findAll(dto.getMembros()).values();
         Set<Usuario> membros = new HashSet<>(values);
         entity.setValues(dto, dono, membros);

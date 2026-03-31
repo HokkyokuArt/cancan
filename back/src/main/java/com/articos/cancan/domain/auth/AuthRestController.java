@@ -2,7 +2,6 @@ package com.articos.cancan.domain.auth;
 
 import com.articos.cancan.domain.auth.AuthRecords.*;
 import com.articos.cancan.domain.usuario.*;
-import com.articos.cancan.security.jwt.role.*;
 import jakarta.validation.*;
 import lombok.*;
 import org.springframework.http.*;
@@ -16,11 +15,11 @@ import java.util.*;
 public class AuthRestController {
     private final AuthService authService;
 
-//    @AdminOnly
+    //    @AdminOnly
     @PostMapping("/register")
     public ResponseEntity<UUID> register(@RequestBody @Valid RegisterPayload request) {
         Usuario user = authService.register(request);
-        return new ResponseEntity<>(user.getId(), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user.getId());
     }
 
     @PostMapping("/logar")

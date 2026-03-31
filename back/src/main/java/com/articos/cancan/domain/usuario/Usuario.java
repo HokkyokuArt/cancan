@@ -1,9 +1,11 @@
 package com.articos.cancan.domain.usuario;
 
 import com.articos.cancan.common.*;
+import com.articos.cancan.common.annotations.*;
 import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.usuario.dto.*;
 import com.articos.cancan.security.jwt.role.*;
+import com.articos.cancan.utils.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +13,7 @@ import lombok.*;
 @Table(name = "USUARIO")
 @Getter
 @Setter
+@EntidadeFrontFriendly(nome = "Usuário", artigo = Artigo.MASCULINO)
 public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO, AbstractEntityDTO> {
 
     @Column(nullable = false, length = 100)

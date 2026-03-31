@@ -1,0 +1,12 @@
+package com.articos.cancan.common.exceptions.core;
+
+public enum ProblemaCode {
+    ERRO_INTERNO,
+    NAO_ENCONTRADO,
+    DUPLICIDADE,
+    RESPONSAVEL_NAO_PERTENCE_AO_PROJETO,
+    MOVER_TAREFA,
+    FECHAR_TAREFA,
+    ATINGIU_LIMITE_TAREFAS,
+    DONO_NAO_POSSUI_ROLE_ADMIN,
+}

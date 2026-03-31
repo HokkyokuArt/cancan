@@ -39,7 +39,6 @@ public abstract class SuperEntity<
         }
     }
 
-    @SneakyThrows
     @Override
     public RESPONSE_DTO toDTO() {
         Class<RESPONSE_DTO> responseDtoClass =

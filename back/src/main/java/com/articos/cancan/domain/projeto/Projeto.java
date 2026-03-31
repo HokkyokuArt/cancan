@@ -1,9 +1,11 @@
 package com.articos.cancan.domain.projeto;
 
 import com.articos.cancan.common.*;
+import com.articos.cancan.common.annotations.*;
 import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.dto.*;
 import com.articos.cancan.domain.usuario.*;
+import com.articos.cancan.utils.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +17,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"nome"}, callSuper = false)
+@EntidadeFrontFriendly(nome = "Projeto", artigo = Artigo.MASCULINO)
 public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, AbstractEntityDTO> {
     @Column(nullable = false, length = 100)
     private String nome;
