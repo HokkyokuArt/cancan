@@ -7,3 +7,9 @@ export enum RouterURL {
   PROJETO = "projeto",
   TAREFA = "tarefa",
 }
+
+export enum RouteFluxo {
+  VISUALIZAR = "visualizar",
+  CRIAR = "criar",
+  EDITAR = "editar",
+}

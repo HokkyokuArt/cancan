@@ -8,9 +8,9 @@ import './reset.css';
 import { router } from './routes.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 );

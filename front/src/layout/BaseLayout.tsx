@@ -17,7 +17,7 @@ const BaseLayout = () => {
             <Box sx={{ display: 'flex' }}>
                 <TopBar onToggleMenu={handleDrawerToggle} />
                 <SideMenu open={openMenu} onClose={handleDrawerToggle} />
-                <Box component="main" sx={{ p: 3 }}>
+                <Box component="main" sx={{ p: 3, width: '100%' }}>
                     <Toolbar />
                     <Outlet />
                 </Box>

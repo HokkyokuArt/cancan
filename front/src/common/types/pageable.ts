@@ -1,3 +1,5 @@
+import type { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
+
 export class Pageable {
   page: number;
   size: number;
@@ -17,12 +19,18 @@ export class Pageable {
     return new Pageable({ ...params, sort: [] });
   }
 
+  public static ofDataGridModel(paginationData: {
+    paginationModel: GridPaginationModel;
+    sortModel: GridSortModel;
+  }): Pageable {
+    return new Pageable({
+      page: paginationData.paginationModel.page,
+      size: paginationData.paginationModel.pageSize,
+      sort: Sort.ofDataGridModel(paginationData.sortModel),
+    });
+  }
+
   public build() {
-    console.log(
-      Array.isArray(this.sort)
-        ? this.sort.map((s) => s.build()).join("&")
-        : this.sort.build(),
-    );
     return {
       page: this.page,
       size: this.size,
@@ -63,6 +71,16 @@ export class Sort {
 
   public static ofField(field: string) {
     return new Sort({ field, order: OrderDirection.ASC });
+  }
+
+  public static ofDataGridModel(sort: GridSortModel): Sort | Sort[] {
+    return sort.map(
+      (s) =>
+        new Sort({
+          field: s?.field,
+          order: s?.sort === "asc" ? OrderDirection.ASC : OrderDirection.DESC,
+        }),
+    );
   }
 
   public build() {

@@ -1,5 +1,4 @@
 import type { SuperPayloadResponseDTO } from "../../common/types/abstractEntity";
-import type { Filter } from "../../common/types/pageable";
 import type { UUID } from "../../common/types/uuid";
 
 export type TarefaPayloadDTO = SuperPayloadResponseDTO & {
@@ -25,4 +24,9 @@ export type TarefaResponseDTO = SuperPayloadResponseDTO & {
   prazo: Date;
 };
 
-export type TarefaFiltroDTO = Filter & {};
+export type TarefaFiltroDTO = {
+  status?: string;
+  prioridade?: string;
+  responsavel?: UUID;
+  datas?: Date[];
+};

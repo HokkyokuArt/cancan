@@ -1,46 +1,64 @@
-import { Button } from '@mui/material';
-import { useState } from 'react';
-import useSuperRequests from '../../common/services/useSuperRequests';
-import type { AbstractEntityDTO } from '../../common/types/abstractEntity';
-import { Pageable, Sort } from '../../common/types/pageable';
-import { useAppSelector } from '../../redux/store';
-import type { ProjetoFiltroDTO, ProjetoPayloadDTO } from './projeto.model';
+import type { GridColDef } from "@mui/x-data-grid";
+import type { AbstractEntityDTO } from "../../common/types/abstractEntity";
+import type { DataGridRowAction } from "../../components/CustomDataGrid";
+import CustomDialog from "../../components/CustomDialog";
+import BaseCrud from "../../layout/BaseCrud";
+import type { ProjetoFiltroDTO, ProjetoPayloadDTO } from "./projeto.model";
+
+const columns: GridColDef<AbstractEntityDTO>[] = [
+    {
+        field: 'id',
+        headerName: 'UUID',
+        flex: 1,
+        sortable: true,
+    },
+    {
+        field: 'descritivo',
+        headerName: 'Descritivo',
+        width: 150,
+        sortable: true,
+    },
+];
+
+const actions: DataGridRowAction<AbstractEntityDTO>[] = [
+    {
+        id: 'editar',
+        label: 'Editar',
+        // icon: <AddIcon />,
+        onClick: (row) => {
+            console.log('Editar', row);
+        },
+    },
+    {
+        id: 'excluir',
+        label: 'Excluir',
+        // icon: <AddIcon />,
+        onClick: (row) => {
+            console.log('Excluir', row);
+        },
+        disabled: (row) => true,
+    },
+];
 
 
 const Projeto = () => {
-
-    const { find, create, pageable } = useSuperRequests<ProjetoPayloadDTO, AbstractEntityDTO, ProjetoFiltroDTO>({ url: '/projeto' });
-    const { id: dono } = useAppSelector(s => s.tokenState);
-
-    const [abc, setAbc] = useState<ProjetoPayloadDTO | null>(null);
-
-    const handleCreate = () => {
-        const body: ProjetoPayloadDTO = {
-            nome: 'Projeto teste abc',
-            sigla: 'PRJ',
-            descricao: 'Eu sla oq q ta acontencendo só quero dormir ahhhhhhhhhhhhhh',
-            dono: dono!,
-            membros: []
-        };
-
-        create(body);
-    };
-
-    const handleFind = () => {
-        find('531655d8-1d05-49a9-8c46-489e67326da6');
-    };
-
-    const handleList = () => {
-        pageable({ nome: 'abc' }, Pageable.of({ page: 0, size: 10, sort: Sort.ofField('nome') }));
-    };
-
     return (
-        <>
-            <h1>Projeto</h1>
-            <Button onClick={handleCreate}>Create</Button>
-            <Button onClick={handleFind}>Find</Button>
-            <Button onClick={handleList}>List</Button>
-        </>
+        <BaseCrud<ProjetoPayloadDTO, AbstractEntityDTO, ProjetoFiltroDTO >
+            requestPath="/projeto"
+            columns={columns}
+            actions={actions}
+            dialogDetail={props => <CustomDialog
+                {...props}
+                title={"Novo"}
+                content={<>AAAAAAAAAAAA</>}
+            />}
+
+            dialogFiltro={props => <CustomDialog
+                {...props}
+                title={"Filtro"}
+                content={<>AAAAAAAAAAAA</>}
+            />}
+        />
     );
 };
 
