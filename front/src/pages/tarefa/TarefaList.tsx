@@ -4,9 +4,10 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { Box, Tooltip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
+import dayjs from 'dayjs';
 import type { CrudState } from "../../common/types/crudState";
 import { OrderDirection } from "../../common/types/pageable";
-import BaseCrud, { CrudAction } from "../../layout/BaseCrud";
+import BaseCrud, { CrudAction, type ChipsConfig } from "../../layout/BaseCrud";
 import { setTarefaState } from "../../redux/features/tarefaSlice";
 import { useAppDispatch } from "../../redux/store";
 import type { TarefaListDTO } from "./tarefa.model";
@@ -77,8 +78,36 @@ const columns: GridColDef<TarefaListDTO>[] = [
     },
 ];
 
-const Tarefa = () => {
+const chipsConfig: ChipsConfig<'tarefa'> = {
+    status: {
+        label: 'Status',
+    },
+    prioridade: {
+        label: 'Prioridade',
+    },
+    responsavel: {
+        label: 'Responsável',
+    },
+    criacaoInicio: {
+        label: 'Criação início',
+        convertValue: val => dayjs(val).format('DD/MM/YYYY'),
+    },
+    criacaoFim: {
+        label: 'Criação fim',
+        convertValue: val => dayjs(val).format('DD/MM/YYYY'),
+    },
+    prazoInicio: {
+        label: 'Prazo início',
+        convertValue: val => dayjs(val).format('DD/MM/YYYY'),
+    },
+    prazoFim: {
+        label: 'Prazo fim',
+        convertValue: val => dayjs(val).format('DD/MM/YYYY'),
+    },
 
+};
+
+const Tarefa = () => {
     const dispatch = useAppDispatch();
     const handleSetState = (_: CrudAction, crudState: Partial<CrudState<"tarefa">>) => {
         dispatch(setTarefaState(crudState));
@@ -89,6 +118,7 @@ const Tarefa = () => {
             entityName="tarefa"
             onSetCrudState={handleSetState}
             columns={columns}
+            chipsConfig={chipsConfig}
             initialSort={[
                 {
                     field: 'codigo',

@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, Chip, Tooltip, Typography } from "@mui/material";
 import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 import { useEffect, useState, type JSX } from 'react';
 import useSuperRequests from '../common/services/useSuperRequests';
@@ -36,6 +36,8 @@ export type CrudFiltroProps<K extends CrudDtoTypeMapKey> = {
     onClear: () => void;
 };
 
+export type ChipsConfig<K extends CrudDtoTypeMapKey> = Partial<Record<keyof GenericFiltroDTO<K>, { label: string; convertValue?: (val: any) => string; }>>;
+
 type Props<
     K extends CrudDtoTypeMapKey
 > = {
@@ -43,6 +45,7 @@ type Props<
     columns: GridColDef<GenericListResponseDTO<K>>[];
     actions?: DataGridRowAction<GenericListResponseDTO<K>>[];
     initialSort?: GridSortModel;
+    chipsConfig: ChipsConfig<K>;
     onSetCrudState: (action: CrudAction, crudState: Partial<CrudState<K>>) => void;
     dialogDetail: (props: CrudDetailDialogProps<K>) => JSX.Element;
     dialogFiltro: (props: CrudFiltroProps<K>) => JSX.Element;
@@ -57,6 +60,8 @@ const BaseCrud = <
         dialogFiltro,
         entityName,
         onSetCrudState: setCrudState,
+        chipsConfig,
+        initialSort,
         actions } = props;
 
     const crudState = useAppSelector(s => s[`${entityName}State` as keyof typeof s]) as CrudState<K>;
@@ -81,7 +86,7 @@ const BaseCrud = <
         pageSize: 10,
     });
 
-    const [sortModel, setSortModel] = useState<GridSortModel>(props.initialSort ?? []);
+    const [sortModel, setSortModel] = useState<GridSortModel>(initialSort ?? []);
 
     const [dialogDetailState, setDialogDetailState] = useState<{ open: boolean; }>({ open: false });
     const [dialogFiltroState, setDialogFiltroState] = useState<{ open: boolean; }>({ open: false });
@@ -190,9 +195,23 @@ const BaseCrud = <
         },
     ];
 
+    const getChips = () => {
+        const filtros = crudState.filtro;
+        if (!!filtros)
+            // TODO: arrumar chips com values que são id de entidade
+            return <Box marginBottom={'10px'} display='flex' gap={'3px'}>
+                {Object.entries(filtros)
+                    .filter(([key, value]) => (Array.isArray(value) ? value?.length : !!value) && key !== 'buscar')
+                    .map(([key, value]) => {
+                        const configChip = chipsConfig[key as keyof GenericFiltroDTO<K>];
+                        return <Chip key={key} label={`${configChip?.label}: ${configChip?.convertValue?.(value) ?? value}`} />;
+                    })}
+            </Box>;
+    };
+
     return (
         <>
-            <Box display='flex' gap={'10px'} marginBottom={'20px'} maxWidth={'calc(100% - 45px)'}>
+            <Box display='flex' gap={'10px'} marginBottom={'10px'} maxWidth={'calc(100% - 45px)'}>
                 <CustomInput
                     id='busca'
                     label="Buscar"
@@ -225,8 +244,10 @@ const BaseCrud = <
                 </CustomButton>
             </Box >
 
+            {getChips()}
+
             <CustomDataGrid<GenericListResponseDTO<K>>
-                height={'calc(100vh - 240px)'}
+                height={'calc(100vh - 275px)'}
                 page={page}
                 columns={columns}
                 paginationModel={paginationModel}
