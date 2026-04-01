@@ -18,7 +18,7 @@ const initialState: ProjetoPayloadDTO = {
 
 const ProjetoDetail = (props: CrudDetailDialogProps<"projeto">) => {
     const state = useAppSelector(s => s.projetoState);
-    const [localState, setLocalState] = useState<ProjetoPayloadDTO>(initialState);
+    const [localState, setLocalState] = useState(initialState);
 
     useEffect(() => {
         if (!props.open) {

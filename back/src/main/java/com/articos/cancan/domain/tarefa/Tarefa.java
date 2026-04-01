@@ -1,6 +1,5 @@
 package com.articos.cancan.domain.tarefa;
 
-import com.articos.cancan.common.*;
 import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.*;
 import com.articos.cancan.domain.tarefa.dto.*;
@@ -18,9 +17,9 @@ import java.time.*;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"codigo"}, callSuper = false)
-public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, AbstractEntityDTO> {
+public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, TarefaListResponseDTO> {
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false, length = 30)
     private String titulo;
 
     @Column(nullable = false, length = 10)

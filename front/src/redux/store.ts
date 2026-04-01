@@ -6,6 +6,7 @@ import {
 } from "react-redux";
 import { blockUIReducer } from "./features/blockUISlice";
 import { projetoReducer } from "./features/projetoSlice";
+import { tarefaReducer } from "./features/tarefaSlice";
 import { tokenReducer } from "./features/tokenSlice";
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     blockUIState: blockUIReducer,
     tokenState: tokenReducer,
     projetoState: projetoReducer,
+    tarefaState: tarefaReducer,
   },
 });
 

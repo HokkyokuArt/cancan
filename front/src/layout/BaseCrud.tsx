@@ -7,7 +7,7 @@ import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data
 import { useEffect, useState, type JSX } from 'react';
 import useSuperRequests from '../common/services/useSuperRequests';
 import type { CrudDtoTypeMapKey, CrudState, GenericFiltroDTO, GenericListResponseDTO, GenericPayloadDTO } from '../common/types/crudState';
-import { OrderDirection, Pageable, type Page } from '../common/types/pageable';
+import { Pageable, type Page } from '../common/types/pageable';
 import type { UUID } from '../common/types/uuid';
 import CustomButton from '../components/CustomButton';
 import CustomDataGrid, { type DataGridRowAction } from '../components/CustomDataGrid';
@@ -34,6 +34,7 @@ type Props<
     entityName: string,
     columns: GridColDef<GenericListResponseDTO<K>>[];
     actions?: DataGridRowAction<GenericListResponseDTO<K>>[];
+    initialSort?: GridSortModel;
     onSetCrudState: (action: CrudAction, crudState: Partial<CrudState<K>>) => void;
     dialogDetail: (props: CrudDetailDialogProps<K>) => JSX.Element;
     dialogFiltro: (props: { open: boolean, onClose: () => void; }) => JSX.Element;
@@ -72,12 +73,7 @@ const BaseCrud = <
         pageSize: 10,
     });
 
-    const [sortModel, setSortModel] = useState<GridSortModel>([
-        {
-            field: 'nome',
-            sort: OrderDirection.ASC,
-        }
-    ]);
+    const [sortModel, setSortModel] = useState<GridSortModel>(props.initialSort ?? []);
 
     const [dialogDetailState, setDialogDetailState] = useState<{ open: boolean; }>({ open: false });
     const [dialogFiltroState, setDialogFiltroState] = useState<{ open: boolean; }>({ open: false });
@@ -188,13 +184,16 @@ const BaseCrud = <
 
     return (
         <>
-            <Box display='flex' gap={'10px'} marginBottom={'20px'}>
+            <Box display='flex' gap={'10px'} marginBottom={'20px'} maxWidth={'calc(100% - 45px)'}>
                 <CustomInput
                     id='busca'
-                    sx={{ maxWidth: '700px' }}
                     label="Buscar"
+                    sx={{
+                        maxWidth: '700px',
+                    }}
                     onChange={v => handleBuscaGeral(v)}
                 />
+
                 <CustomButton
                     color='primary'
                     isIcon
@@ -216,7 +215,7 @@ const BaseCrud = <
             </Box>
 
             <CustomDataGrid<GenericListResponseDTO<K>>
-                height={'calc(100vh - 180px)'}
+                height={'calc(100vh - 240px)'}
                 page={page}
                 columns={columns}
                 paginationModel={paginationModel}

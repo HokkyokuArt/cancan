@@ -16,7 +16,7 @@ public class ProjetoRestController extends SuperRestController<
         ProjetoPayloadDTO,
         ProjetoPayloadDTO,
         ProjetoFiltroDTO,
-        ProjetoListDTO
+        ProjetoListResponsavelDTO
         > {
 
     private final UsuarioService usuarioService;

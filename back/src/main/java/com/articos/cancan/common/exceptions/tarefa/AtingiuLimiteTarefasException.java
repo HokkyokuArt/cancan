@@ -13,7 +13,7 @@ public class AtingiuLimiteTarefasException extends BusinessException {
             StatusTarefa statusTarefa,
             long limite
     ) {
-        super(String.format("%s atingiu o limite máximo (%s) de tarefas com status %s.",
+        super(String.format("%s atingiu o limite máximo de tarefas (%s) com status %s.",
                         usuario.getNome(),
                         limite,
                         statusTarefa.getDescritivo()

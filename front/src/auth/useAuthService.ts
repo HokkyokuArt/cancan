@@ -3,14 +3,16 @@ import useRequestService from "../common/services/useRequestService";
 import { RouterURL } from "../common/types/routerUrl";
 import type { UUID } from "../common/types/uuid";
 import { resetToken, setToken } from "../redux/features/tokenSlice";
-import { useAppDispatch } from "./../redux/store";
-import type {
-  LoginPayload,
-  RegisterPayload,
-  TokenResponse,
+import { useAppDispatch, useAppSelector } from "./../redux/store";
+import {
+  Role,
+  type LoginPayload,
+  type RegisterPayload,
+  type TokenResponse,
 } from "./auth.model";
 
 const useAuthService = () => {
+  const tokenState = useAppSelector((s) => s.tokenState);
   const { postRequest } = useRequestService();
   const dispatch = useAppDispatch();
   const navigate = useCustomNavigate();
@@ -42,11 +44,15 @@ const useAuthService = () => {
         body: payload,
         then: (res) => {
           console.log({ res });
+          navigate(RouterURL.LOGIN);
         },
         catch: (err) => {
           console.log(err);
         },
       });
+    },
+    isAdmin() {
+      return tokenState.role === Role.ROLE_ADMIN;
     },
   };
 };

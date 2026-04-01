@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, type Breakpoint } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, useMediaQuery, useTheme, type Breakpoint } from '@mui/material';
 import { type JSX } from 'react';
 import CustomButton from './CustomButton';
 
@@ -13,12 +13,16 @@ export type CustomDialogProps = {
 };
 
 const CustomDialog = (props: CustomDialogProps) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
         <Dialog
+            fullScreen={isMobile}
             open={props.open}
             onClose={props.onClose}
             fullWidth
             maxWidth={props.maxWidth}
+
         >
             <form onSubmit={e => {
                 e.preventDefault();
@@ -26,7 +30,9 @@ const CustomDialog = (props: CustomDialogProps) => {
             }}>
                 <DialogTitle>{props.title}</DialogTitle>
 
-                <DialogContent>
+                <DialogContent sx={{
+                    marginBottom: isMobile ? '70px' : 'inherit'
+                }}>
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -36,13 +42,14 @@ const CustomDialog = (props: CustomDialogProps) => {
                     </Box>
                 </DialogContent>
 
-                <DialogActions sx={{ pb: '20px', px: '20px' }}>
+                <DialogActions sx={{ width: 'calc(100% - 42px)', pb: '20px', px: '20px', position: isMobile ? 'fixed' : '', bottom: 0 }}>
                     {
                         props.actions?.(props.onClose)
                         ?? <Box sx={{
                             display: 'flex',
-                            justifyContent: 'space-between',
-                            width: '100%'
+                            justifyContent: isMobile ? 'flex-end' : 'space-between',
+                            width: '100%',
+                            gap: '20px',
                         }}>
                             <CustomButton onClick={props.onClose} color='error'>Cancelar</CustomButton>
                             <CustomButton type="submit">

@@ -1,6 +1,7 @@
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, useMediaQuery, useTheme } from '@mui/material';
 import useCustomNavigate from '../common/hooks/useCustomNavigate';
 import { RouterURL } from '../common/types/routerUrl';
+import useAuthService from '../auth/useAuthService';
 
 
 const menuWidth = 240;
@@ -10,11 +11,11 @@ const menuItens = [
         label: 'HOME',
         routes: [RouterURL.HOME],
     },
-    {
-        id: RouterURL.REGISTER,
-        label: 'REGISTER',
-        routes: [RouterURL.REGISTER],
-    },
+    // {
+    //     id: RouterURL.REGISTER,
+    //     label: 'REGISTER',
+    //     routes: [RouterURL.PAINEL, RouterURL.REGISTER],
+    // },
     {
         id: RouterURL.INICIO,
         label: 'INICIO',
@@ -39,6 +40,10 @@ type Props = {
 
 const SideMenu = (props: Props) => {
     const navigate = useCustomNavigate();
+    const { deslogar } = useAuthService();
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
         <nav>
             <Drawer
@@ -49,7 +54,7 @@ const SideMenu = (props: Props) => {
                     keepMounted: true,
                 }}
                 sx={{
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: menuWidth },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: isMobile ? '100%' : menuWidth },
                 }}
             >
                 <Box onClick={props.onClose} sx={{ textAlign: 'center' }}>
@@ -61,6 +66,12 @@ const SideMenu = (props: Props) => {
                                 </ListItemButton>
                             </ListItem>
                         ))}
+
+                        {isMobile && <ListItem disablePadding>
+                            <ListItemButton sx={{ textAlign: 'center' }}>
+                                <ListItemText primary={'LOGOUT'} onClick={() => deslogar()} />
+                            </ListItemButton>
+                        </ListItem>}
                     </List>
                 </Box>
             </Drawer>

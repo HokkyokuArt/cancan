@@ -5,6 +5,11 @@ export type AbstractEntityDTO = {
   descritivo: string;
 };
 
+export type AbstractEnumDTO = {
+  name: string;
+  descritivo: string;
+};
+
 export type SuperPayloadResponseDTO = {
   id?: UUID;
   version?: number;

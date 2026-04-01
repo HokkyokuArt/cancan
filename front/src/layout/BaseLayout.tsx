@@ -2,6 +2,7 @@ import { Toolbar } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import { Outlet } from 'react-router';
+import BreadCrumb from './BreadCrumb';
 import SideMenu from './SideMenu';
 import TopBar from './TopBar';
 
@@ -19,10 +20,10 @@ const BaseLayout = () => {
                 <SideMenu open={openMenu} onClose={handleDrawerToggle} />
                 <Box component="main" sx={{ p: 3, width: '100%' }}>
                     <Toolbar />
+                    <BreadCrumb />
                     <Outlet />
                 </Box>
-            </Box>
-
+            </Box >
         </>
     );
 };

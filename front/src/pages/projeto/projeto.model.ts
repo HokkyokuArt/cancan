@@ -13,7 +13,7 @@ export type ProjetoPayloadDTO = SuperPayloadResponseDTO & {
   membros: UUID[];
 };
 
-export type ProjetoListDTO = AbstractEntityDTO & {
+export type ProjetoListResponseDTO = AbstractEntityDTO & {
   nome: string;
   sigla: string;
   dono: string;

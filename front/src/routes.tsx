@@ -7,7 +7,7 @@ import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
 import ProjetoList from "./pages/projeto/ProjetoList";
 import Register from "./pages/register/Register";
-import Tarefa from "./pages/tarefa/Tarefa";
+import Tarefa from "./pages/tarefa/TarefaList";
 import Guard from "./security/Guard";
 import ProtectedRoute from "./security/ProtectedRoute";
 
@@ -45,6 +45,13 @@ export const router = createBrowserRouter([
           { path: RouterURL.TAREFA, element: <Tarefa />, }
         ]
       },
+
+      {
+        element: <ProtectedRoute allowedRole={Role.ROLE_ADMIN} />,
+        children: [
+          { path: RouterURL.REGISTER, element: <Register /> },
+        ]
+      },
     ]
   },
 
@@ -59,5 +66,4 @@ export const router = createBrowserRouter([
   },
   { path: RouterURL.HOME, element: <Home /> },
   { path: RouterURL.LOGIN, element: <Login /> },
-  { path: RouterURL.REGISTER, element: <Register /> },
 ]);

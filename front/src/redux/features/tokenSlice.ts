@@ -3,9 +3,10 @@ import { deepReset } from "../../utils/utils";
 import type { TokenResponse } from "./../../auth/auth.model";
 
 const initialState: TokenResponse = {
-  token: null,
+  token: "",
   role: null,
-  id: null,
+  id: "",
+  nome: "",
 };
 
 const tokenSlice = createSlice({

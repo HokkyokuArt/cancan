@@ -1,6 +1,7 @@
 package com.articos.cancan.domain.tarefa.dto;
 
 import com.articos.cancan.common.crud.*;
+import com.articos.cancan.domain.projeto.*;
 import com.articos.cancan.domain.tarefa.*;
 import com.articos.cancan.domain.tarefa.prioridadetarefa.*;
 import com.articos.cancan.domain.tarefa.statustarefa.*;
@@ -28,6 +29,18 @@ public class TarefaPayloadDTO extends SuperPayloadDTO<Tarefa> {
     private UUID projeto;
     @NotNull
     private LocalDate prazo;
+
+    public TarefaPayloadDTO(Tarefa tarefa) {
+        super(tarefa);
+        this.titulo = tarefa.getTitulo();
+        this.descricao = tarefa.getDescricao();
+        this.status = tarefa.getStatus();
+        this.prioridade = tarefa.getPrioridade();
+        this.responsavel = tarefa.getResponsavel().getId();
+        this.projeto = tarefa.getProjeto().getId();
+        this.prazo = tarefa.getPrazo();
+
+    }
 
     @Override
     public Tarefa toEntity() {

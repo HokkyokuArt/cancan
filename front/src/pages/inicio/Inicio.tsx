@@ -1,7 +1,10 @@
+import { Typography } from "@mui/material";
+import { useAppSelector } from "../../redux/store";
 
 const Inicio = () => {
+    const token = useAppSelector(s => s.tokenState);
     return (
-        <div>Inicio</div>
+        <Typography>BEM VINDO DE VOLTA {token.nome.toUpperCase()}! 👋🎉</Typography>
     );
 };
 

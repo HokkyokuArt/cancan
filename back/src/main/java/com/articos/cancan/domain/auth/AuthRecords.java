@@ -20,11 +20,12 @@ public class AuthRecords {
     public record TokenResponse(
             String token,
             Role role,
-            UUID id
+            UUID id,
+            String nome
     ) {
 
         public TokenResponse(String token, Usuario usuario) {
-            this(token, usuario.getRole(), usuario.getId());
+            this(token, usuario.getRole(), usuario.getId(), usuario.getNome());
         }
     }
 

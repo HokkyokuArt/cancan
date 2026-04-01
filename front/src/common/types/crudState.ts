@@ -1,26 +1,26 @@
 import type {
   ProjetoFiltroDTO,
-  ProjetoListDTO,
+  ProjetoListResponseDTO,
   ProjetoPayloadDTO,
 } from "../../pages/projeto/projeto.model";
 import type {
   TarefaFiltroDTO,
+  TarefaListDTO,
   TarefaPayloadDTO,
   TarefaResponseDTO,
 } from "../../pages/tarefa/tarefa.model";
-import type { AbstractEntityDTO } from "./abstractEntity";
 
 export type CrudDtoTypeMap = {
   projeto: {
     PAYLOAD_DTO: ProjetoPayloadDTO;
     RESPONSE_DTO: ProjetoPayloadDTO;
-    LIST_RESPONSE_DTO: ProjetoListDTO;
+    LIST_RESPONSE_DTO: ProjetoListResponseDTO;
     FILTRO_DTO: ProjetoFiltroDTO;
   };
   tarefa: {
     PAYLOAD_DTO: TarefaPayloadDTO;
     RESPONSE_DTO: TarefaResponseDTO;
-    LIST_RESPONSE_DTO: AbstractEntityDTO;
+    LIST_RESPONSE_DTO: TarefaListDTO;
     FILTRO_DTO: TarefaFiltroDTO;
   };
 };

@@ -17,7 +17,7 @@ import java.util.*;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"nome"}, callSuper = false)
 @EntidadeFrontFriendly(nome = "Projeto", artigo = Artigo.MASCULINO)
-public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, ProjetoListDTO> {
+public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, ProjetoListResponsavelDTO> {
     @Column(nullable = false, length = 30)
     private String nome;
 

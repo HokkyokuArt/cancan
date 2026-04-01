@@ -10,9 +10,10 @@ export type RegisterPayload = LoginPayload & {
 };
 
 export type TokenResponse = {
-  token: string | null;
+  token: string;
   role: Role | null;
-  id: UUID | null;
+  id: UUID;
+  nome: string;
 };
 
 export enum Role {

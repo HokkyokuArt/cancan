@@ -1,18 +1,15 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Box, Button, IconButton, InputAdornment } from "@mui/material";
+import { Button, IconButton, InputAdornment } from "@mui/material";
 import { useState } from "react";
 import type { RegisterPayload } from "../../auth/auth.model";
 import useAuthService from "../../auth/useAuthService";
-import useCustomNavigate from '../../common/hooks/useCustomNavigate';
-import { RouterURL } from '../../common/types/routerUrl';
 import CustomInput from "../../components/CustomInput";
 import BaseLayoutAuthForm from '../../layout/BaseLayoutAuthForm';
 
 const Register = () => {
 
     const { register } = useAuthService();
-    const navigate = useCustomNavigate();
 
     const [localState, setLocalState] = useState({ showPassword: false });
 
@@ -54,7 +51,6 @@ const Register = () => {
         />
 
         <Button type='submit'>Registrar</Button>
-        <Button onClick={() => navigate(RouterURL.LOGIN)}>Já tem conta? <Box paddingX={1}>Entrar</Box></Button>
     </BaseLayoutAuthForm>;
 };
 
