@@ -188,14 +188,14 @@ public abstract class SuperRestController<
     @ApiError404
     @MemberAccess
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<RESPONSE_DTO> delete(
+    public ResponseEntity<PAYLOAD_DTO> delete(
             @Parameter(description = "ID do registro", required = true)
             @PathVariable UUID id
     ) {
         ENTIDADE entity = service.loadWithException(id, "excluir");
         validator.validateExcluir(entity);
         ENTIDADE deleted = service.delete(entity);
-        RESPONSE_DTO toReturn = deleted.toResponseDTO();
+        PAYLOAD_DTO toReturn = deleted.toPayloadDTO();
         return ResponseEntity.ok(toReturn);
     }
 

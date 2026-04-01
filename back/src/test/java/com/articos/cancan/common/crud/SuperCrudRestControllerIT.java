@@ -52,18 +52,16 @@ public abstract class SuperCrudRestControllerIT<
         params.add("page", "0");
         params.add("size", "10");
 
-        ResultActions result = postRequest(
-                url("/autocomplete"),
+        ResultActions result = postRequest(url("/autocomplete"),
                 getJwt(),
                 objectMapper.writeValueAsString(buildValidFilter()),
                 status().isOk(),
-                params
-        );
+                params);
 
         result.andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content").isNotEmpty());
-
-        assertAutocompleteResponse(result);
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andExpect(jsonPath("$.content[0].id").isNotEmpty())
+                .andExpect(jsonPath("$.content[0].descritivo").isNotEmpty());
     }
 
     @Test
@@ -76,18 +74,15 @@ public abstract class SuperCrudRestControllerIT<
         params.add("page", "0");
         params.add("size", "10");
 
-        ResultActions result = postRequest(
-                url("/pageable"),
+        postRequest(url("/pageable"),
                 getJwt(),
                 objectMapper.writeValueAsString(buildValidFilter()),
                 status().isOk(),
                 params
-        );
-
-        result.andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content").isNotEmpty());
-
-        assertPageableResponse(result);
+        ).andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andExpect(jsonPath("$.content[*].id").isNotEmpty())
+                .andExpect(jsonPath("$.content[*].descritivo").isNotEmpty());
     }
 
     @Test
@@ -95,24 +90,20 @@ public abstract class SuperCrudRestControllerIT<
     public void find() {
         ENTIDADE entity = persistValidEntity();
         flushAndClear();
-        ResultActions result = getRequest(
-                url("/find/" + entity.getId()),
+        ResultActions result = getRequest(url("/find/" + entity.getId()),
                 getJwt(),
                 status().isOk()
-        );
+        ).andExpect(jsonPath("$.id").value(entity.getId().toString()));
         assertFindResponse(result, entity);
     }
 
     @Test
     @SneakyThrows
     public void find_404() {
-        ResultActions result = getRequest(
-                url("/find/" + UUID.randomUUID()),
+        getRequest(url("/find/" + UUID.randomUUID()),
                 getJwt(),
                 status().isNotFound()
-        );
-
-        result.andExpect(jsonPath("$.status").value(404))
+        ).andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").isNotEmpty())
                 .andExpect(jsonPath("$.path").value(containsString("/find/")));
     }
@@ -127,12 +118,9 @@ public abstract class SuperCrudRestControllerIT<
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("ids", id.toString());
 
-        getRequest(
-                url("/find-abstract-entity"),
+        getRequest(url("/find-abstract-entity"),
                 getJwt(),
-                status().isOk(),
-                params
-        )
+                status().isOk(), params)
                 .andExpect(jsonPath("$[0].id").value(id.toString()))
                 .andExpect(jsonPath("$[0].descritivo").isNotEmpty());
     }
@@ -142,28 +130,22 @@ public abstract class SuperCrudRestControllerIT<
     public void findToEdit() {
         ENTIDADE entity = persistValidEntity();
         flushAndClear();
-
-        ResultActions result = getRequest(
-                url("/find-to-edit/" + entity.getId()),
+        ResultActions result = getRequest(url("/find-to-edit/" + entity.getId()),
                 getJwt(),
                 status().isOk()
-        );
-
+        ).andExpect(jsonPath("$.id").value(entity.getId().toString()));
         assertFindToEditResponse(result, entity);
     }
 
     @Test
     @SneakyThrows
     public void findToEdit_404() {
-        ResultActions result = getRequest(
-                url("/find-to-edit/" + UUID.randomUUID()),
+        getRequest(url("/find-to-edit/" + UUID.randomUUID()),
                 getJwt(),
                 status().isNotFound()
-        );
-
-        result.andExpect(jsonPath("$.status").value(404))
+        ).andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").isNotEmpty())
-                .andExpect(jsonPath("$.path").value(org.hamcrest.Matchers.containsString("/find-to-edit/")));
+                .andExpect(jsonPath("$.path").value(containsString("/find-to-edit/")));
     }
 
     @Test
@@ -172,23 +154,21 @@ public abstract class SuperCrudRestControllerIT<
         PAYLOAD_DTO sentDto = buildValidCreateDto();
         long countBefore = repository.count();
 
-        ResultActions result = postRequest(
-                url("/create"),
-                getJwt(),
-                objectMapper.writeValueAsString(sentDto),
-                status().isCreated()
-        );
-
-        assertCreateResponse(result, sentDto);
+        ResultActions result =
+                postRequest(url("/create"),
+                        getJwt(),
+                        objectMapper.writeValueAsString(sentDto),
+                        status().isCreated()
+                ).andExpect(jsonPath("$.id").isNotEmpty());
+        assertResultResponse(result, sentDto);
         flushAndClear();
 
         long countAfter = repository.count();
         assertThat(countAfter).isEqualTo(countBefore + 1);
 
-        ENTIDADE savedEntity = repository.findAll().stream()
-                .reduce((first, second) -> second)
-                .orElseThrow();
-        assertCreatedEntity(savedEntity, sentDto);
+        ENTIDADE savedEntity = repository.findAll().stream().reduce((first, second) -> second).orElseThrow();
+        assertThat(savedEntity.getId()).isNotNull();
+        assertCreatedOrUpdatedEntity(savedEntity, sentDto);
     }
 
     @Test
@@ -201,22 +181,20 @@ public abstract class SuperCrudRestControllerIT<
         long countBefore = repository.count();
         PAYLOAD_DTO sentDto = buildValidUpdateDto(entity);
 
-        ResultActions result = putRequest(
-                url("/update"),
+        ResultActions result = putRequest(url("/update"),
                 getJwt(),
                 objectMapper.writeValueAsString(sentDto),
                 status().isOk()
-        );
-
-        assertUpdateResponse(result, sentDto, entity);
-
+        ).andExpect(jsonPath("$.id").value(entity.getId().toString()));
+        assertResultResponse(result, sentDto);
         flushAndClear();
 
         long countAfter = repository.count();
         assertThat(countAfter).isEqualTo(countBefore);
 
         ENTIDADE updatedEntity = repository.findById(id).orElseThrow();
-        assertUpdatedEntity(updatedEntity, sentDto, entity);
+        assertThat(updatedEntity.getId()).isEqualTo(entity.getId());
+        assertCreatedOrUpdatedEntity(updatedEntity, sentDto);
     }
 
     @Test
@@ -224,15 +202,10 @@ public abstract class SuperCrudRestControllerIT<
     public void uptdate_404() {
         PAYLOAD_DTO dto = buildValidCreateDto();
         ReflectionUtils.setIn(dto, "id", UUID.randomUUID());
-
-        ResultActions result = putRequest(
-                url("/update"),
+        putRequest(url("/update"),
                 getJwt(),
-                objectMapper.writeValueAsString(dto),
-                status().isNotFound()
-        );
-
-        result.andExpect(jsonPath("$.status").value(404))
+                objectMapper.writeValueAsString(dto), status().isNotFound()
+        ).andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").isNotEmpty())
                 .andExpect(jsonPath("$.path").value(getBaseUrl() + "/update"));
     }
@@ -243,19 +216,13 @@ public abstract class SuperCrudRestControllerIT<
         ENTIDADE entity = persistValidEntity();
         UUID id = entity.getId();
         flushAndClear();
-
         long countBefore = repository.count();
-
-        ResultActions result = deleteRequest(
-                url("/delete/" + id),
+        ResultActions result = deleteRequest(url("/delete/" + id),
                 getJwt(),
                 status().isOk()
-        );
-
-        assertDeleteResponse(result, entity);
-
+        ).andExpect(jsonPath("$.id").value(entity.getId().toString()));
+        assertResultResponse(result, entity.toPayloadDTO());
         flushAndClear();
-
         long countAfter = repository.count();
         assertThat(countAfter).isEqualTo(countBefore - 1);
         assertThat(repository.findById(id)).isEmpty();
@@ -264,34 +231,21 @@ public abstract class SuperCrudRestControllerIT<
     @Test
     @SneakyThrows
     public void delete_404() {
-        ResultActions result = deleteRequest(
-                url("/delete/" + UUID.randomUUID()),
+        deleteRequest(url("/delete/" + UUID.randomUUID()),
                 getJwt(),
                 status().isNotFound()
-        );
-
-        result.andExpect(jsonPath("$.status").value(404))
+        ).andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").isNotEmpty())
-                .andExpect(jsonPath("$.path").value(org.hamcrest.Matchers.containsString("/delete/")));
+                .andExpect(jsonPath("$.path").value(containsString("/delete/")));
     }
-
-    public abstract void assertAutocompleteResponse(ResultActions result);
-
-    public abstract void assertPageableResponse(ResultActions result);
 
     public abstract void assertFindResponse(ResultActions result, ENTIDADE entity);
 
     public abstract void assertFindToEditResponse(ResultActions result, ENTIDADE entity);
 
-    public abstract void assertCreatedEntity(ENTIDADE savedEntity, PAYLOAD_DTO sentDto);
+    public abstract void assertResultResponse(ResultActions result, PAYLOAD_DTO sentDto);
 
-    public abstract void assertCreateResponse(ResultActions result, PAYLOAD_DTO sentDto);
-
-    public abstract void assertUpdatedEntity(ENTIDADE updatedEntity, PAYLOAD_DTO sentDto, ENTIDADE originalEntity);
-
-    public abstract void assertUpdateResponse(ResultActions result, PAYLOAD_DTO sentDto, ENTIDADE originalEntity);
-
-    public abstract void assertDeleteResponse(ResultActions result, ENTIDADE entity);
+    public abstract void assertCreatedOrUpdatedEntity(ENTIDADE savedEntity, PAYLOAD_DTO sentDto);
 
     public abstract ENTIDADE persistValidEntity();
 
