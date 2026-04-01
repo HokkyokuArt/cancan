@@ -4,10 +4,12 @@ import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.*;
 import com.articos.cancan.domain.tarefa.dto.*;
 import com.articos.cancan.domain.usuario.*;
+import io.swagger.v3.oas.annotations.tags.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tarefa")
+@Tag(name = "Tarefa", description = "Operações relacionadas a tarefa")
 public class TarefaRestController extends SuperRestController<
         Tarefa,
         TarefaPayloadDTO,

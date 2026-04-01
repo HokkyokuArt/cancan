@@ -4,6 +4,7 @@ import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.dto.*;
 import com.articos.cancan.domain.usuario.*;
 import com.articos.cancan.security.jwt.role.*;
+import io.swagger.v3.oas.annotations.tags.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/projeto")
+@Tag(name = "Projeto", description = "Operações relacionadas a projeto")
 public class ProjetoRestController extends SuperRestController<
         Projeto,
         ProjetoPayloadDTO,
