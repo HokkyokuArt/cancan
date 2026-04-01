@@ -38,8 +38,8 @@ public abstract class SuperCrudRestControllerIT<
 
     @BeforeEach
     public void setupSuper() {
-        admin = usuarioRepository.save(usuarioAdmin());
-        member = usuarioRepository.save(usuarioMember());
+        admin = usuarioRepository.save(admin());
+        member = usuarioRepository.save(member());
     }
 
     @Test

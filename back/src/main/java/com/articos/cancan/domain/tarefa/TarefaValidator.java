@@ -32,7 +32,7 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         validateAtingiuMaximoTarefasInProgress(entityAntiga, dto);
     }
 
-    private static void validateResponsavelNaoEstaNoProjeto(Tarefa entity) {
+    protected static void validateResponsavelNaoEstaNoProjeto(Tarefa entity) {
         if (usuarioLogadoEhDonoDoProjeto(entity.getProjeto().getDono().getId()))
             return;
         boolean responsavelNaoEstaNoProjeto = !entity.getProjeto().getMembros().contains(entity.getResponsavel());
@@ -41,13 +41,13 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         }
     }
 
-    private static void validateMoverTarefa(Tarefa entity, TarefaPayloadDTO dto) {
+    protected static void validateMoverTarefa(Tarefa entity, TarefaPayloadDTO dto) {
         if (entity.getStatus().isDone() && !dto.getStatus().isInProgress()) {
             throw new MoverTarefaException(dto.getStatus());
         }
     }
 
-    private void validateFecharTarefaPrioridadeCritical(Tarefa entity, TarefaPayloadDTO dto) {
+    protected void validateFecharTarefaPrioridadeCritical(Tarefa entity, TarefaPayloadDTO dto) {
         boolean prioridadeCritical = entity.getPrioridade().isCritical();
         boolean isMovendoPraDone = dto.getStatus().isDone();
         if (!usuarioRepository.isAdmin(getUsuarioAtual()) && prioridadeCritical && isMovendoPraDone) {
@@ -55,7 +55,7 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         }
     }
 
-    private void validateAtingiuMaximoTarefasInProgress(Tarefa entity, TarefaPayloadDTO dto) {
+    protected void validateAtingiuMaximoTarefasInProgress(Tarefa entity, TarefaPayloadDTO dto) {
         Usuario responsavel = entity.getResponsavel();
         StatusTarefa status = dto.getStatus();
         if (status.isInProgress()) {
@@ -67,7 +67,7 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         }
     }
 
-    private static boolean usuarioLogadoEhDonoDoProjeto(UUID donoProjeto) {
+    protected static boolean usuarioLogadoEhDonoDoProjeto(UUID donoProjeto) {
         return donoProjeto.equals(getUsuarioAtual());
     }
 }
