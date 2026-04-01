@@ -53,7 +53,7 @@ export type Page<T> = {
   totalPages: number;
 };
 
-export type Filter = Record<string, unknown>;
+export type Filter = { busca?: string; buscaSimples?: string };
 
 export enum OrderDirection {
   ASC = "asc",

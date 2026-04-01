@@ -1,6 +1,5 @@
 package com.articos.cancan.domain.projeto;
 
-import com.articos.cancan.common.*;
 import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.dto.*;
 import com.articos.cancan.domain.usuario.*;
@@ -17,7 +16,7 @@ public class ProjetoRestController extends SuperRestController<
         ProjetoPayloadDTO,
         ProjetoPayloadDTO,
         ProjetoFiltroDTO,
-        AbstractEntityDTO
+        ProjetoListDTO
         > {
 
     private final UsuarioService usuarioService;

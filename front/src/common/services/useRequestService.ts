@@ -49,7 +49,8 @@ const useRequestService = () => {
 
     switch (requestType) {
       case RequestType.GET:
-        return axiosRequest.get(url, _getExtraInfo(params));
+      case RequestType.DELETE:
+        return axiosRequest[requestType](url, _getExtraInfo(params));
       default:
         return axiosRequest[requestType](
           url,
@@ -89,7 +90,7 @@ const useRequestService = () => {
       _makeRequest(param, RequestType.PATCH);
     },
 
-    deleteRequest: <T>(param: RequestBodyParams<T>): void => {
+    deleteRequest: <T>(param: RequestBaseParams<T>): void => {
       _makeRequest(param, RequestType.DELETE);
     },
   };

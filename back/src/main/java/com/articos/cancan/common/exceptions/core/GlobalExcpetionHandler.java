@@ -1,6 +1,7 @@
 package com.articos.cancan.common.exceptions.core;
 
 import jakarta.servlet.http.*;
+import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ public class GlobalExcpetionHandler {
                 .extra(Map.of("err", ex.getMessage()))
                 .build();
 
+        ex.printStackTrace();
         return ResponseEntity.status(status).body(body);
     }
 }

@@ -32,9 +32,10 @@ const Register = () => {
         title='Registrar'
         onSubmit={handleClickRegister}
     >
-        <CustomInput label="Nome" onChange={v => setRegisterState(s => ({ ...s, nome: v }))} />
-        <CustomInput label="Email" type="email" onChange={v => setRegisterState(s => ({ ...s, email: v }))} />
+        <CustomInput id='nome' label="Nome" onChange={v => setRegisterState(s => ({ ...s, nome: v }))} />
+        <CustomInput id='email' label="Email" type="email" onChange={v => setRegisterState(s => ({ ...s, email: v }))} />
         <CustomInput
+            id='senha'
             label="Senha"
             helperText={'teste'}
             type={localState.showPassword ? "text" : 'password'}

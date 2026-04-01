@@ -1,19 +1,20 @@
 import { FormControl, TextField, type TextFieldProps } from '@mui/material';
 
 type Props = {
-    onChange?: (e: string) => void;
+    onChange?: (e: string, id: string) => void;
     label: string;
     formControl?: boolean;
+    id: string;
 };
 
 const CustomInput = (props: Omit<TextFieldProps, 'onChange'> & Props) => {
     const input = <TextField
         {...props}
-        variant='standard'
+        variant={props.multiline ? 'outlined' : 'standard'}
         size="small"
         fullWidth
         onChange={e => {
-            props.onChange?.(e.target.value);
+            props.onChange?.(e.target.value, props.id);
         }}
         helperText={props.error ? props.helperText : null}
     />;

@@ -5,7 +5,7 @@ import BaseLayout from "./layout/BaseLayout";
 import Home from "./pages/home/Home";
 import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
-import Projeto from "./pages/projeto/Projeto";
+import ProjetoList from "./pages/projeto/ProjetoList";
 import Register from "./pages/register/Register";
 import Tarefa from "./pages/tarefa/Tarefa";
 import Guard from "./security/Guard";
@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
       {
         element: <ProtectedRoute allowedRole={Role.ROLE_MEMBER} />,
         children: [
-          { path: RouterURL.PROJETO, element: <Projeto />, }
+          { path: RouterURL.PROJETO, element: <ProjetoList />, }
         ]
       },
 

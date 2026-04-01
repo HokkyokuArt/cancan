@@ -20,8 +20,9 @@ const Login = () => {
         title='Login'
         onSubmit={handleClickLogin}
     >
-        <CustomInput label="Email" type="email" value={loginState.email} onChange={v => setLoginState(s => ({ ...s, email: v }))} />
+        <CustomInput id='email' label="Email" type="email" value={loginState.email} onChange={v => setLoginState(s => ({ ...s, email: v }))} />
         <CustomInput
+            id='senha'
             label="Senha"
             helperText={'teste'}
             type={localState.showPassword ? "text" : 'password'}

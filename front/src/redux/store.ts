@@ -5,10 +5,12 @@ import {
   type TypedUseSelectorHook,
 } from "react-redux";
 import { tokenReducer } from "./features/tokenSlice";
+import { projetoReducer } from "./features/projetoSlice";
 
 export const store = configureStore({
   reducer: {
     tokenState: tokenReducer,
+    projetoState: projetoReducer,
   },
 });
 

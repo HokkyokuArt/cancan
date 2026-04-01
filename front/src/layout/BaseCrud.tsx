@@ -1,34 +1,61 @@
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 import { useEffect, useState, type JSX } from 'react';
 import useSuperRequests from '../common/services/useSuperRequests';
-import type { AbstractEntityDTO, SuperPayloadResponseDTO } from '../common/types/abstractEntity';
-import { OrderDirection, Pageable, type Filter, type Page } from '../common/types/pageable';
+import type { CrudDtoTypeMapKey, CrudState, GenericFiltroDTO, GenericListResponseDTO, GenericPayloadDTO } from '../common/types/crudState';
+import { OrderDirection, Pageable, type Page } from '../common/types/pageable';
+import type { UUID } from '../common/types/uuid';
 import CustomButton from '../components/CustomButton';
 import CustomDataGrid, { type DataGridRowAction } from '../components/CustomDataGrid';
+import CustomDialog from '../components/CustomDialog';
 import CustomInput from "../components/CustomInput";
+import { useAppSelector } from '../redux/store';
 
-type Props<LIST_RESPONSE_DTO extends AbstractEntityDTO> = {
-    requestPath: string,
-    columns: GridColDef<LIST_RESPONSE_DTO>[];
-    actions: DataGridRowAction<LIST_RESPONSE_DTO>[];
-    dialogDetail: (props: { open: boolean, onClose: () => void; }) => JSX.Element;
+export enum CrudAction {
+    VISUALIZAR = "visualizar",
+    CRIAR = "criar",
+    EDITAR = "editar",
+    LIMPAR = "limpar",
+}
+export type CrudDetailDialogProps<K extends CrudDtoTypeMapKey> = {
+    title: string,
+    open: boolean,
+    onClose: () => void;
+    onConfirm: (entidade: GenericPayloadDTO<K>) => void;
+};
+
+type Props<
+    K extends CrudDtoTypeMapKey
+> = {
+    entityName: string,
+    columns: GridColDef<GenericListResponseDTO<K>>[];
+    actions?: DataGridRowAction<GenericListResponseDTO<K>>[];
+    onSetCrudState: (action: CrudAction, crudState: Partial<CrudState<K>>) => void;
+    dialogDetail: (props: CrudDetailDialogProps<K>) => JSX.Element;
     dialogFiltro: (props: { open: boolean, onClose: () => void; }) => JSX.Element;
 };
 
 const BaseCrud = <
-    RESPONSE_DTO extends SuperPayloadResponseDTO,
-    LIST_RESPONSE_DTO extends AbstractEntityDTO,
-    FILTRO_DTO extends Filter
->(props: Props<LIST_RESPONSE_DTO>) => {
+    K extends CrudDtoTypeMapKey
+>(props: Props<K>) => {
+    const {
+        columns,
+        dialogDetail,
+        dialogFiltro,
+        entityName,
+        onSetCrudState: setCrudState,
+        actions } = props;
 
-    const { pageable } = useSuperRequests<RESPONSE_DTO, LIST_RESPONSE_DTO, FILTRO_DTO>({
-        url: props.requestPath
+    const crudState = useAppSelector(s => s[`${entityName}State` as keyof typeof s]) as CrudState<K>;
+    const { pageable, findToEdit, create, update, delete: deleteEntity } = useSuperRequests<K>({
+        url: '/' + entityName
     });
 
-    const [page, setPage] = useState<Page<LIST_RESPONSE_DTO>>({
+    const [page, setPage] = useState<Page<GenericListResponseDTO<K>>>({
         content: [],
         totalElements: 0,
         totalPages: 0,
@@ -54,26 +81,74 @@ const BaseCrud = <
         }
     ]);
 
-    const [dialogDetail, setDialogDetail] = useState<{ open: boolean; }>({ open: false });
-    const [dialogFiltro, setDialogFiltro] = useState<{ open: boolean; }>({ open: false });
+    const [dialogDetailState, setDialogDetailState] = useState<{ open: boolean; }>({ open: false });
+    const [dialogFiltroState, setDialogFiltroState] = useState<{ open: boolean; }>({ open: false });
+    const [dialogExclusaoState, setDialogExclusaoState] = useState<{ open: boolean; row: GenericListResponseDTO<K> | null; }>({ open: false, row: null });
 
     useEffect(() => {
-        list();
+        handleList();
     }, [
         paginationModel,
         sortModel
     ]);
 
-    const list = () => {
+    const handleBuscaGeral = (value: string) => {
         setLoading(true);
         pageable(
-            {} as FILTRO_DTO,
+            { busca: value } as GenericFiltroDTO<K>,
             Pageable.ofDataGridModel({ paginationModel, sortModel }),
             res => {
                 setPage(res);
                 setLoading(false);
             }
         );
+    };
+
+    const handleList = () => {
+        setLoading(true);
+        pageable(
+            {} as GenericFiltroDTO<K>,
+            Pageable.ofDataGridModel({ paginationModel, sortModel }),
+            res => {
+                setPage(res);
+                setLoading(false);
+            }
+        );
+    };
+
+    const handleFindToEdit = (id: UUID) => {
+        setLoading(true);
+        findToEdit(id, res => {
+            setCrudState(CrudAction.EDITAR, { entidade: res });
+            setDialogDetailState(prev => ({ ...prev, open: true }));
+            setLoading(false);
+        });
+    };
+
+    const handleCreate = (entidade: GenericPayloadDTO<K>) => {
+        setLoading(true);
+        create(entidade, () => {
+            setDialogDetailState(prev => ({ ...prev, open: false }));
+            handleList();
+        });
+    };
+
+    const handleUpdate = (entidade: GenericPayloadDTO<K>) => {
+        setLoading(true);
+        update(entidade, () => {
+            setDialogDetailState(prev => ({ ...prev, open: false }));
+            handleList();
+        });
+    };
+
+    const handleDelete = () => {
+        const id = dialogExclusaoState.row?.id;
+        if (!id) return;
+        setLoading(true);
+        deleteEntity(id, () => {
+            setDialogExclusaoState(prev => ({ ...prev, open: false, row: null }));
+            handleList();
+        });
     };
 
     const handlePaginationModelChange = (model: GridPaginationModel) => {
@@ -87,19 +162,47 @@ const BaseCrud = <
         });
     };
 
+    const baseActions: DataGridRowAction<GenericListResponseDTO<K>>[] = [
+        // {
+        //     id: 'visualizar',
+        //     label: 'Visualizar',
+        //     icon: <VisibilityIcon />,
+        //     onClick: (row) => {
+        //         setDialogDetailState(prev => ({ ...prev, open: true }));
+        //     },
+        // },
+        {
+            id: 'editar',
+            label: 'Editar',
+            icon: <EditIcon />,
+            onClick: (row) => {
+                handleFindToEdit(row.id);
+            },
+        },
+        {
+            id: 'excluir',
+            label: 'Excluir',
+            icon: <DeleteIcon />,
+            onClick: (row) => {
+                setDialogExclusaoState(prev => ({ ...prev, open: true, row }));
+            },
+        },
+    ];
+
     return (
         <>
             <Box display='flex' gap={'10px'} marginBottom={'20px'}>
                 <CustomInput
+                    id='busca'
                     sx={{ maxWidth: '700px' }}
                     label="Buscar"
-                    onChange={v => console.log('busca => ', v)}
+                    onChange={v => handleBuscaGeral(v)}
                 />
                 <CustomButton
                     color='primary'
                     isIcon
                     onClick={() =>
-                        setDialogFiltro(prev => ({ ...prev, open: true }))
+                        setDialogFiltroState(prev => ({ ...prev, open: true }))
                     }
                 >
                     <FilterListIcon />
@@ -108,38 +211,57 @@ const BaseCrud = <
                     color='primary'
                     endIcon={<AddIcon />}
                     onClick={() =>
-                        setDialogDetail(prev => ({ ...prev, open: true }))
+                        setDialogDetailState(prev => ({ ...prev, open: true }))
                     }
                 >
                     Novo
                 </CustomButton>
             </Box>
 
-            <CustomDataGrid<LIST_RESPONSE_DTO>
+            <CustomDataGrid<GenericListResponseDTO<K>>
                 height={'calc(100vh - 180px)'}
                 page={page}
-                columns={props.columns}
+                columns={columns}
                 loading={loading}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationModelChange}
                 sortModel={sortModel}
                 onSortModelChange={handleSortModelChange}
-                rowActions={props.actions}
+                rowActions={[...baseActions, ...(actions ?? [])]}
             />
 
-            {props.dialogDetail({
-                open: dialogDetail.open,
+            {dialogDetail({
+                title: !crudState.entidade ? 'Novo' : 'Editar',
+                open: dialogDetailState.open,
                 onClose: () => {
-                    setDialogDetail(prev => ({ ...prev, open: false }));
+                    setDialogDetailState(prev => ({ ...prev, open: false }));
+                    setCrudState(CrudAction.LIMPAR, { entidade: null, entidadeVisualizar: null });
+                },
+                onConfirm: entidade => {
+                    if (!crudState.entidade) {
+                        handleCreate(entidade);
+                    } else {
+                        handleUpdate(entidade);
+                    }
                 }
             })}
 
-            {props.dialogFiltro({
-                open: dialogFiltro.open,
+            {dialogFiltro({
+                open: dialogFiltroState.open,
                 onClose: () => {
-                    setDialogFiltro(prev => ({ ...prev, open: false }));
+                    setDialogFiltroState(prev => ({ ...prev, open: false }));
                 }
             })}
+
+            <CustomDialog
+                open={dialogExclusaoState.open}
+                onClose={() => {
+                    setDialogExclusaoState(prev => ({ ...prev, open: false, row: null }));
+                }}
+                title={'Atenção'}
+                content={<Typography>Deseja realmente excluir o registro?</Typography>}
+                onConfirm={handleDelete}
+            />
         </>
     );
 };

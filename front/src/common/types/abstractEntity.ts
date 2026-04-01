@@ -6,6 +6,6 @@ export type AbstractEntityDTO = {
 };
 
 export type SuperPayloadResponseDTO = {
-  id: UUID;
+  id?: UUID;
   version?: number;
 };

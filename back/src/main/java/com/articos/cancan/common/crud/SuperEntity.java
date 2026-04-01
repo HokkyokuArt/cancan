@@ -40,7 +40,14 @@ public abstract class SuperEntity<
     }
 
     @Override
-    public RESPONSE_DTO toDTO() {
+    public PAYLOAD_DTO toPayloadDTO() {
+        Class<PAYLOAD_DTO> responseDtoClass =
+                (Class<PAYLOAD_DTO>) ReflectionUtils.inferGenericType(this.getClass(), 0);
+        return ReflectionUtils.newInstance(this, responseDtoClass);
+    }
+
+    @Override
+    public RESPONSE_DTO toResponseDTO() {
         Class<RESPONSE_DTO> responseDtoClass =
                 (Class<RESPONSE_DTO>) ReflectionUtils.inferGenericType(this.getClass(), 1);
         return ReflectionUtils.newInstance(this, responseDtoClass);
@@ -48,6 +55,7 @@ public abstract class SuperEntity<
 
     @Override
     public LIST_DTO toListDTO() {
-        return (LIST_DTO) new AbstractEntityDTO(this);
+        Class<LIST_DTO> responseDtoClass = (Class<LIST_DTO>) ReflectionUtils.inferGenericType(this.getClass(), 2);
+        return ReflectionUtils.newInstance(this, responseDtoClass);
     }
 }

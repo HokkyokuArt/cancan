@@ -24,6 +24,14 @@ public abstract class SuperRestController<
     protected final SuperValidator<ENTIDADE, PAYLOAD_DTO> validator;
 
     @MemberAccess
+    @PostMapping("autocomplete")
+    public ResponseEntity<Page<AbstractEntityDTO>> autocomplete(@RequestBody FILTRO filtro, Pageable pageable) {
+        Page<ENTIDADE> list = service.list(filtro.buildSpecification(), pageable);
+        Page<AbstractEntityDTO> toReturn = list.map(AbstractEntityDTO::new);
+        return ResponseEntity.ok(toReturn);
+    }
+
+    @MemberAccess
     @PostMapping("pageable")
     public ResponseEntity<Page<LIST_RESPONSE_DTO>> pageable(@RequestBody FILTRO filtro, Pageable pageable) {
         Page<ENTIDADE> list = service.list(filtro.buildSpecification(), pageable);
@@ -35,29 +43,45 @@ public abstract class SuperRestController<
     @GetMapping("find/{id}")
     public ResponseEntity<RESPONSE_DTO> find(@PathVariable UUID id) {
         ENTIDADE entity = service.loadWithException(id, "buscar");
-        RESPONSE_DTO toReturn = entity.toDTO();
+        RESPONSE_DTO toReturn = entity.toResponseDTO();
+        return ResponseEntity.ok(toReturn);
+    }
+
+    @MemberAccess
+    @GetMapping("find-abstract-entity")
+    public ResponseEntity<List<AbstractEntityDTO>> findAbstractEntity(@RequestParam Set<UUID> ids) {
+        Map<UUID, ENTIDADE> all = service.findAll(ids);
+        List<AbstractEntityDTO> toReturn = all.values().stream().map(s -> new AbstractEntityDTO(s)).toList();
+        return ResponseEntity.ok(toReturn);
+    }
+
+    @MemberAccess
+    @GetMapping("find-to-edit/{id}")
+    public ResponseEntity<PAYLOAD_DTO> findToEdit(@PathVariable UUID id) {
+        ENTIDADE entity = service.loadWithException(id, "buscar para editar");
+        PAYLOAD_DTO toReturn = entity.toPayloadDTO();
         return ResponseEntity.ok(toReturn);
     }
 
     @MemberAccess
     @PostMapping("create")
-    public ResponseEntity<RESPONSE_DTO> create(@RequestBody @Valid PAYLOAD_DTO dto) {
+    public ResponseEntity<PAYLOAD_DTO> create(@RequestBody @Valid PAYLOAD_DTO dto) {
         ENTIDADE entity = dto.toEntity();
         updateValues(entity, dto);
         validator.validateCreate(entity, dto);
         ENTIDADE saved = service.save(entity);
-        RESPONSE_DTO toReturn = saved.toDTO();
+        PAYLOAD_DTO toReturn = saved.toPayloadDTO();
         return ResponseEntity.status(HttpStatus.CREATED).body(toReturn);
     }
 
     @MemberAccess
     @PutMapping("update")
-    public ResponseEntity<RESPONSE_DTO> update(@RequestBody @Valid PAYLOAD_DTO dto) {
+    public ResponseEntity<PAYLOAD_DTO> update(@RequestBody @Valid PAYLOAD_DTO dto) {
         ENTIDADE entity = service.loadWithException(dto.getId(), "editar");
         validator.validateUpdate(entity, dto);
         updateValues(entity, dto);
         ENTIDADE saved = service.save(entity);
-        RESPONSE_DTO toReturn = saved.toDTO();
+        PAYLOAD_DTO toReturn = saved.toPayloadDTO();
         return ResponseEntity.ok(toReturn);
     }
 
@@ -67,7 +91,7 @@ public abstract class SuperRestController<
         ENTIDADE entity = service.loadWithException(id, "excluir");
         validator.validateExcluir(entity);
         ENTIDADE deleted = service.delete(entity);
-        RESPONSE_DTO toReturn = deleted.toDTO();
+        RESPONSE_DTO toReturn = deleted.toResponseDTO();
         return ResponseEntity.ok(toReturn);
     }
 

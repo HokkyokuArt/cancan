@@ -43,7 +43,7 @@ public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO,
     }
 
     @Override
-    public UsuarioResponseDTO toDTO() {
+    public UsuarioResponseDTO toResponseDTO() {
         return null;
     }
 

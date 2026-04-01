@@ -1,6 +1,6 @@
 package com.articos.cancan.domain.projeto.dto;
 
-import com.articos.cancan.common.interfaces.*;
+import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.projeto.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;
@@ -10,12 +10,30 @@ import java.util.*;
 
 @Getter
 @Setter
-public class ProjetoFiltroDTO implements Filtro<Projeto> {
+public class ProjetoFiltroDTO extends SuperFiltroDTO<Projeto> {
     private String nome;
 
     public Specification<Projeto> buildSpecification() {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
+
+            if (this.busca != null) {
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("nome")),
+                                "%" + this.busca.toLowerCase() + "%"
+                        )
+                );
+            }
+
+            if (this.buscaSimples != null) {
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("nome")),
+                                "%" + this.buscaSimples.toLowerCase() + "%"
+                        )
+                );
+            }
 
             if (this.nome != null) {
                 predicates.add(
