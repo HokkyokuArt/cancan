@@ -2,12 +2,8 @@ package com.articos.cancan.domain.tarefa.dto;
 
 import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.tarefa.*;
-import com.articos.cancan.domain.tarefa.prioridadetarefa.*;
-import com.articos.cancan.domain.tarefa.statustarefa.*;
+import com.articos.cancan.utils.*;
 import lombok.*;
-
-import java.time.*;
-import java.util.*;
 
 @NoArgsConstructor
 @Getter
@@ -15,25 +11,25 @@ public class TarefaResponseDTO extends SuperResponseDTO<Tarefa> {
     private String titulo;
     private String codigo;
     private String descricao;
-    private StatusTarefa status;
-    private PrioridadeTarefa prioridade;
-    private UUID responsavel;
-    private UUID projeto;
-    private LocalDateTime dataCriacao;
-    private LocalDateTime ultimaAtualizacao;
-    private LocalDate prazo;
+    private String status;
+    private String prioridade;
+    private String responsavel;
+    private String projeto;
+    private String dataCriacao;
+    private String ultimaAtualizacao;
+    private String prazo;
 
     public TarefaResponseDTO(Tarefa entity) {
         super(entity);
         this.titulo = entity.getTitulo();
         this.codigo = entity.getCodigo();
         this.descricao = entity.getDescricao();
-        this.status = entity.getStatus();
-        this.prioridade = entity.getPrioridade();
-        this.responsavel = entity.getResponsavel().getId();
-        this.projeto = entity.getProjeto().getId();
-        this.dataCriacao = entity.getDataCriacao();
-        this.ultimaAtualizacao = entity.getUltimaAtualizacao();
-        this.prazo = entity.getPrazo();
+        this.status = entity.getStatus().getDescritivo();
+        this.prioridade = entity.getPrioridade().getDescritivo();
+        this.responsavel = entity.getResponsavel().getDescritivo();
+        this.projeto = entity.getProjeto().getDescritivo();
+        this.dataCriacao = DateUtils.displayPattern(entity.getDataCriacao().toLocalDate());
+        this.ultimaAtualizacao = DateUtils.displayPattern(entity.getUltimaAtualizacao().toLocalDate());
+        this.prazo = DateUtils.displayPattern(entity.getPrazo());
     }
 }

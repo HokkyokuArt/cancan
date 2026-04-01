@@ -14,8 +14,7 @@ import lombok.*;
 @Getter
 @Setter
 @EntidadeFrontFriendly(nome = "Usuário", artigo = Artigo.MASCULINO)
-public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO, AbstractEntityDTO> {
-
+public class Usuario extends SuperEntity<UsuarioPayloadDTO, UsuarioResponseDTO, AbstractEntityDTO> {
     @Column(nullable = false, length = 100)
     private String nome;
 
@@ -44,16 +43,11 @@ public class Usuario extends SuperEntity<UsuarioResponseDTO, UsuarioResponseDTO,
 
     @Override
     public UsuarioResponseDTO toResponseDTO() {
-        return null;
+        return new UsuarioResponseDTO(this);
     }
 
     @Override
     public AbstractEntityDTO toListDTO() {
-        return null;
-    }
-
-    @Override
-    public void setValues(UsuarioResponseDTO usuarioResponseDTO) {
-
+        return new AbstractEntityDTO(this);
     }
 }

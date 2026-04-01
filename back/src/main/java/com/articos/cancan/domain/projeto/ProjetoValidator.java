@@ -21,7 +21,7 @@ public class ProjetoValidator extends SuperValidator<Projeto, ProjetoPayloadDTO>
     }
 
     @Override
-    protected void validateUpdate(Projeto entity, ProjetoPayloadDTO dto) {
+    protected void validateUpdate(Projeto entityAntiga, ProjetoPayloadDTO dto) {
         validateDonoIsAdmin(dto.getDono());
     }
 

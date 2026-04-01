@@ -23,53 +23,6 @@ public class AuthRestController {
     private final AuthService authService;
 
     @Operation(
-            summary = "Registrar usuário",
-            description = "Cria um novo usuário no sistema."
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Usuário registrado com sucesso",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = UUID.class),
-                            examples = @ExampleObject(
-                                    name = "Exemplo de retorno",
-                                    value = "\"550e8400-e29b-41d4-a716-446655440000\""
-                            )
-                    )
-            ),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "401", description = "Não autenticado"),
-            @ApiResponse(responseCode = "403", description = "Sem permissão para acessar o recurso")
-    })
-    @AdminOnly
-    @PostMapping("/register")
-    public ResponseEntity<UUID> register(
-            @RequestBody(
-                    required = true,
-                    description = "Dados necessários para registrar um novo usuário",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    name = "Exemplo de payload",
-                                    value = """
-                                            {
-                                              "nome": "João da Silva",
-                                              "email": "joao@email.com",
-                                              "senha": "123456"
-                                            }
-                                            """
-                            )
-                    )
-            )
-            @org.springframework.web.bind.annotation.RequestBody @Valid RegisterPayload request
-    ) {
-        Usuario user = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user.getId());
-    }
-
-    @Operation(
             summary = "Realizar login",
             description = "Autentica o usuário e retorna os tokens de acesso.",
             security = {}

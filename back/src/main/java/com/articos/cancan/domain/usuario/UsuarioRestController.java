@@ -6,44 +6,88 @@ import com.articos.cancan.domain.usuario.dto.*;
 import com.articos.cancan.security.jwt.role.*;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.tags.*;
+import org.springframework.data.domain.*;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/usuario")
 @Tag(name = "Usuário", description = "Operações relacionadas a usuário")
 public class UsuarioRestController extends SuperRestController<
         Usuario,
-        UsuarioResponseDTO,
+        UsuarioPayloadDTO,
         UsuarioResponseDTO,
         UsuarioFiltroDTO,
         AbstractEntityDTO
         > {
 
-    public UsuarioRestController(UsuarioService service) {
-        super(service, null);
+    private final PasswordEncoder passwordEncoder;
+
+    public UsuarioRestController(
+            UsuarioService service,
+            UsuarioValidator validator,
+            PasswordEncoder passwordEncoder) {
+        super(service, validator);
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Hidden
     @Override
-    @MemberAccess
+    @AdminOnly
+    @PostMapping("autocomplete")
+    public ResponseEntity<Page<AbstractEntityDTO>> autocomplete(UsuarioFiltroDTO filtro, Pageable pageable) {
+        return super.autocomplete(filtro, pageable);
+    }
+
+    @Override
+    @AdminOnly
+    @PostMapping("pageable")
+    public ResponseEntity<Page<AbstractEntityDTO>> pageable(UsuarioFiltroDTO filtro, Pageable pageable) {
+        return super.pageable(filtro, pageable);
+    }
+
+    @Override
+    @AdminOnly
+    @GetMapping("find/{id}")
+    public ResponseEntity<UsuarioResponseDTO> find(UUID id) {
+        return super.find(id);
+    }
+
+    @Override
+    @AdminOnly
+    @GetMapping("find-to-edit/{id}")
+    public ResponseEntity<UsuarioPayloadDTO> findToEdit(UUID id) {
+        return super.findToEdit(id);
+    }
+
+    @Override
+    @AdminOnly
     @PostMapping("create")
-    public ResponseEntity<UsuarioResponseDTO> create(UsuarioResponseDTO dto) {
-        throw new ResponseStatusException(
-                HttpStatus.METHOD_NOT_ALLOWED,
-                "Não é permitido criar usuários por este endpoint."
-        );
+    public ResponseEntity<UsuarioPayloadDTO> create(UsuarioPayloadDTO dto) {
+        return super.create(dto);
     }
 
     @Hidden
     @Override
-    @MemberAccess
-    @PostMapping("update")
-    public ResponseEntity<UsuarioResponseDTO> update(UsuarioResponseDTO dto) {
-        throw new ResponseStatusException(
-                HttpStatus.METHOD_NOT_ALLOWED,
-                "Não é permitido atualizar usuários por este endpoint."
-        );
+    @AdminOnly
+    @PutMapping("update")
+    public ResponseEntity<UsuarioPayloadDTO> update(UsuarioPayloadDTO dto) {
+        return super.update(dto);
+    }
+
+    @Override
+    @AdminOnly
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<UsuarioPayloadDTO> delete(UUID id) {
+        return super.delete(id);
+    }
+
+    @Override
+    protected void updateValues(Usuario usuario, UsuarioPayloadDTO dto) {
+        usuario.setNome(dto.getNome().toUpperCase());
+        usuario.setEmail(dto.getEmail());
+        usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
     }
 }

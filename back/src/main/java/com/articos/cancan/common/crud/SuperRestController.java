@@ -199,7 +199,5 @@ public abstract class SuperRestController<
         return ResponseEntity.ok(toReturn);
     }
 
-    protected void updateValues(ENTIDADE entidade, PAYLOAD_DTO dto) {
-        entidade.setValues(dto);
-    }
+    protected abstract void updateValues(ENTIDADE entidade, PAYLOAD_DTO dto);
 }

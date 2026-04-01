@@ -16,21 +16,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AuthService {
     private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
-    @Transactional
-    public Usuario register(RegisterPayload request) {
-        if (usuarioRepository.existsByEmail(request.email())) {
-            throw new DuplicidadeException("Email já cadastrado");
-        }
-        Usuario usuario = new Usuario();
-        usuario.setNome(request.nome().toUpperCase());
-        usuario.setEmail(request.email());
-        usuario.setSenha(passwordEncoder.encode(request.senha()));
-        return usuarioRepository.save(usuario);
-    }
 
     public TokenResponse login(LoginPayload request) {
         authenticationManager.authenticate(

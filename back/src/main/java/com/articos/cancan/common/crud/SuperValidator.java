@@ -4,7 +4,7 @@ public abstract class SuperValidator<T extends SuperEntity, PAYLOAD_DTO extends 
     protected void validateCreate(T entity, PAYLOAD_DTO dto) {
     }
 
-    protected void validateUpdate(T entity, PAYLOAD_DTO dto) {
+    protected void validateUpdate(T entityAntiga, PAYLOAD_DTO dto) {
     }
 
     protected void validateExcluir(T entity) {

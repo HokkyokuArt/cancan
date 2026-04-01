@@ -43,10 +43,6 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, P
         super(dto);
     }
 
-    @Override
-    public void setValues(ProjetoPayloadDTO o) {
-    }
-
     public void setValues(ProjetoPayloadDTO dto, Usuario dono, Set<Usuario> membros) {
         this.nome = dto.getNome().toUpperCase();
         this.sigla = dto.getSigla().toUpperCase();

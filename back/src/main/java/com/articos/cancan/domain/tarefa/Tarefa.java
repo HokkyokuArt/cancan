@@ -92,10 +92,6 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Tar
     }
 
     @Override
-    public void setValues(TarefaPayloadDTO dto) {
-    }
-
-    @Override
     public String getDescritivo() {
         return String.format("%s - %s", this.codigo, this.titulo);
     }

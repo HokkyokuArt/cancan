@@ -25,11 +25,11 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
     }
 
     @Override
-    protected void validateUpdate(Tarefa entity, TarefaPayloadDTO dto) {
-        validateResponsavelNaoEstaNoProjeto(entity);
-        validateMoverTarefa(entity, dto);
-        validateFecharTarefaPrioridadeCritical(entity, dto);
-        validateAtingiuMaximoTarefasInProgress(entity, dto);
+    protected void validateUpdate(Tarefa entityAntiga, TarefaPayloadDTO dto) {
+        validateResponsavelNaoEstaNoProjeto(entityAntiga);
+        validateMoverTarefa(entityAntiga, dto);
+        validateFecharTarefaPrioridadeCritical(entityAntiga, dto);
+        validateAtingiuMaximoTarefasInProgress(entityAntiga, dto);
     }
 
     private static void validateResponsavelNaoEstaNoProjeto(Tarefa entity) {
