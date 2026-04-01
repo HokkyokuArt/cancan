@@ -90,4 +90,30 @@ public class ReflectionUtils {
         }
         return toReturn;
     }
+
+    public static Field getField(Class<?> clazz, String name) {
+        try {
+            return clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException | SecurityException ignored) {
+            return getField(clazz.getSuperclass(), name);
+        }
+    }
+
+    //    apenas testes...
+    public static void setIn(Object object, String fieldName, Object value) {
+        try {
+            Field field = getField(object.getClass(), fieldName);
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //    apenas testes...
+    public static void setIn(Object object, Map<String, Object> fieldValueMap) {
+        fieldValueMap.entrySet().forEach(s -> {
+            setIn(object, s.getKey(), s.getValue());
+        });
+    }
 }

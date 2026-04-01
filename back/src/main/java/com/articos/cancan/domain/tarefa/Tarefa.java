@@ -60,14 +60,10 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Tar
         super(dto);
     }
 
-    @Override
-    public void setValues(TarefaPayloadDTO dto) {
-    }
-
     public void setValues(TarefaPayloadDTO dto, Usuario responsavel, Projeto projeto, Integer proximoNumero) {
         this.titulo = dto.getTitulo().toUpperCase();
         this.sequencial = proximoNumero;
-        this.codigo = String.format("%s-%s", projeto.getSigla(), proximoNumero).toUpperCase();
+        this.codigo = getCodigo(projeto.getSigla(), proximoNumero);
         this.descricao = dto.getDescricao();
         if (dto.getId() != null) {
             this.status = dto.getStatus();
@@ -76,6 +72,10 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Tar
         this.responsavel = responsavel;
         this.projeto = projeto;
         this.prazo = dto.getPrazo();
+    }
+
+    protected static String getCodigo(String sigla, Integer proximoNumero) {
+        return String.format("%s-%s", sigla, proximoNumero).toUpperCase();
     }
 
     @Override
@@ -92,9 +92,11 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Tar
     }
 
     @Override
+    public void setValues(TarefaPayloadDTO dto) {
+    }
+
+    @Override
     public String getDescritivo() {
         return String.format("%s - %s", this.codigo, this.titulo);
     }
-
-
 }
