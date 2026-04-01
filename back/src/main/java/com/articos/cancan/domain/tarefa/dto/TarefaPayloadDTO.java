@@ -13,20 +13,26 @@ import java.util.*;
 @NoArgsConstructor
 @Getter
 public class TarefaPayloadDTO extends SuperPayloadDTO<Tarefa> {
-
-    @NotEmpty
+    @NotBlank(message = "Título é obrigatório.")
+    @Size(max = 30, message = "Título deve ter no máximo 30 caracteres.")
     private String titulo;
-    @NotEmpty
+
+    @Size(max = 1000, message = "Descrição deve ter no máximo 1000 caracteres.")
     private String descricao;
-    @NotNull
+
+    @NotNull(message = "Status é obrigatório.")
     private StatusTarefa status;
-    @NotNull
+
+    @NotNull(message = "Prioridade é obrigatória.")
     private PrioridadeTarefa prioridade;
-    @NotNull
+
+    @NotNull(message = "Responsável é obrigatório.")
     private UUID responsavel;
-    @NotNull
+
+    @NotNull(message = "Projeto é obrigatório.")
     private UUID projeto;
-    @NotNull
+
+    @NotNull(message = "Prazo é obrigatório.")
     private LocalDate prazo;
 
     public TarefaPayloadDTO(Tarefa tarefa) {

@@ -11,13 +11,16 @@ import java.util.stream.*;
 @NoArgsConstructor
 @Getter
 public class ProjetoPayloadDTO extends SuperPayloadDTO<Projeto> {
-    @NotEmpty
+    @NotBlank(message = "Nome é obrigatório.")
+    @Size(max = 30, message = "Nome deve ter no máximo 30 caracteres.")
     private String nome;
-    @NotEmpty
+    @NotBlank(message = "Sigla é obrigatória.")
+    @Size(min = 3, max = 3, message = "Sigla deve ter exatamente 3 caracteres.")
     private String sigla;
-    @NotEmpty
+    @NotBlank(message = "Descrição é obrigatória.")
+    @Size(max = 100, message = "Descrição deve ter no máximo 100 caracteres.")
     private String descricao;
-    @NotNull
+    @NotNull(message = "Dono é obrigatório.")
     private UUID dono;
     private Set<UUID> membros = new HashSet<>();
 

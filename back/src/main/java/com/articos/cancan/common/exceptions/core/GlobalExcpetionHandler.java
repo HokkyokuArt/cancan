@@ -4,6 +4,7 @@ import jakarta.servlet.http.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authorization.*;
+import org.springframework.web.bind.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.*;
@@ -43,6 +44,33 @@ public class GlobalExcpetionHandler {
                 .path(request.getRequestURI())
                 .extra(Map.of("err", ex.getMessage()))
                 .build();
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ProblemaDetalhe> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        Map<String, Object> extra = new HashMap<>();
+        Map<String, String> campos = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                campos.put(error.getField(), error.getDefaultMessage())
+        );
+        extra.put("campos", campos);
+        ProblemaDetalhe body = ProblemaDetalhe.builder()
+                .timestamp(OffsetDateTime.now())
+                .status(status.value())
+                .error(ex.getClass().getSimpleName())
+                .code(ProblemaCode.DADOS_INVALIDOS)
+                .message("Dados inválidos.")
+                .path(request.getRequestURI())
+                .extra(extra)
+                .build();
+
         return ResponseEntity.status(status).body(body);
     }
 
