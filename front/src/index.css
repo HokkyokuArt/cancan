@@ -3,3 +3,32 @@ body {
 	box-sizing: border-box;
 	min-height: 100vh;
 }
+
+.blockUI {
+	font-weight: 700 !important;
+	position: relative;
+}
+
+.blockUI::after {
+	content: '';
+	animation: dotdotdot 1.5s steps(4) infinite;
+	position: absolute;
+}
+
+@keyframes dotdotdot {
+	0% {
+		content: '';
+	}
+
+	25% {
+		content: '.';
+	}
+
+	50% {
+		content: '..';
+	}
+
+	75% {
+		content: '...';
+	}
+}

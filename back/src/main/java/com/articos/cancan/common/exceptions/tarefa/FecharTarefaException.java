@@ -7,7 +7,7 @@ import static com.articos.cancan.common.exceptions.core.ProblemaCode.*;
 
 public class FecharTarefaException extends BusinessException {
     public FecharTarefaException() {
-        super("Apenas usuários ADMIN podem fechar tarefas CRITICAL",
+        super("Apenas usuários ADMIN podem fechar tarefas CRITICAL.",
                 FECHAR_TAREFA,
                 HttpStatus.BAD_REQUEST,
                 null);

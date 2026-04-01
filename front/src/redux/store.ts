@@ -4,11 +4,13 @@ import {
   useSelector,
   type TypedUseSelectorHook,
 } from "react-redux";
-import { tokenReducer } from "./features/tokenSlice";
+import { blockUIReducer } from "./features/blockUISlice";
 import { projetoReducer } from "./features/projetoSlice";
+import { tokenReducer } from "./features/tokenSlice";
 
 export const store = configureStore({
   reducer: {
+    blockUIState: blockUIReducer,
     tokenState: tokenReducer,
     projetoState: projetoReducer,
   },

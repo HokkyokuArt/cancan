@@ -22,7 +22,6 @@ export interface DataGridRowAction<T> {
 interface CustomDataGridProps<T extends { id: string | number; }> {
     page: Page<T>;
     columns: GridColDef<T>[];
-    loading?: boolean;
 
     paginationModel: GridPaginationModel;
     onPaginationModelChange: (model: GridPaginationModel) => void;
@@ -40,7 +39,6 @@ interface CustomDataGridProps<T extends { id: string | number; }> {
 const CustomDataGrid = <T extends { id: UUID; }>({
     page,
     columns,
-    loading = false,
     paginationModel,
     onPaginationModelChange,
     sortModel,
@@ -91,7 +89,6 @@ const CustomDataGrid = <T extends { id: UUID; }>({
             <DataGrid
                 rows={page.content}
                 columns={finalColumns}
-                loading={loading}
                 getRowId={getRowId}
                 rowCount={page.totalElements}
                 paginationMode="server"

@@ -1,8 +1,9 @@
 package com.articos.cancan.common.exceptions.core;
 
 import jakarta.servlet.http.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.authorization.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.*;
@@ -24,7 +25,42 @@ public class GlobalExcpetionHandler {
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
+        return ResponseEntity.status(status).body(body);
+    }
 
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<ProblemaDetalhe> handleInternalAuthenticationService(
+            InternalAuthenticationServiceException ex,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ProblemaDetalhe body = ProblemaDetalhe.builder()
+                .timestamp(OffsetDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(ex.getClass().getSimpleName())
+                .code(ProblemaCode.TOKEN_INVALIDO)
+                .message("Email ou senha incorreto.")
+                .path(request.getRequestURI())
+                .extra(Map.of("err", ex.getMessage()))
+                .build();
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ProblemaDetalhe> handleAuthorizationDenied(
+            AuthorizationDeniedException ex,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        ProblemaDetalhe body = ProblemaDetalhe.builder()
+                .timestamp(OffsetDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(ex.getClass().getSimpleName())
+                .code(ProblemaCode.TOKEN_INVALIDO)
+                .message("Acesso negado!")
+                .path(request.getRequestURI())
+                .extra(Map.of("err", ex.getMessage()))
+                .build();
         return ResponseEntity.status(status).body(body);
     }
 
@@ -44,7 +80,7 @@ public class GlobalExcpetionHandler {
                 .extra(Map.of("err", ex.getMessage()))
                 .build();
 
-        ex.printStackTrace();
+//        ex.printStackTrace();
         return ResponseEntity.status(status).body(body);
     }
 }

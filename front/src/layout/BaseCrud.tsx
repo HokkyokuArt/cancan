@@ -67,8 +67,6 @@ const BaseCrud = <
         empty: true,
     });
 
-    const [loading, setLoading] = useState(false);
-
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
         pageSize: 10,
@@ -92,59 +90,58 @@ const BaseCrud = <
         sortModel
     ]);
 
+    const clearCrudState = () => {
+        setTimeout(() => {
+            setCrudState(CrudAction.LIMPAR, { entidade: null, entidadeVisualizar: null });
+        },);
+    };
+
     const handleBuscaGeral = (value: string) => {
-        setLoading(true);
         pageable(
             { busca: value } as GenericFiltroDTO<K>,
             Pageable.ofDataGridModel({ paginationModel, sortModel }),
             res => {
                 setPage(res);
-                setLoading(false);
             }
         );
     };
 
     const handleList = () => {
-        setLoading(true);
         pageable(
             {} as GenericFiltroDTO<K>,
             Pageable.ofDataGridModel({ paginationModel, sortModel }),
             res => {
                 setPage(res);
-                setLoading(false);
             }
         );
     };
 
     const handleFindToEdit = (id: UUID) => {
-        setLoading(true);
         findToEdit(id, res => {
             setCrudState(CrudAction.EDITAR, { entidade: res });
             setDialogDetailState(prev => ({ ...prev, open: true }));
-            setLoading(false);
         });
     };
 
     const handleCreate = (entidade: GenericPayloadDTO<K>) => {
-        setLoading(true);
         create(entidade, () => {
             setDialogDetailState(prev => ({ ...prev, open: false }));
             handleList();
+            clearCrudState();
         });
     };
 
     const handleUpdate = (entidade: GenericPayloadDTO<K>) => {
-        setLoading(true);
         update(entidade, () => {
             setDialogDetailState(prev => ({ ...prev, open: false }));
             handleList();
+            clearCrudState();
         });
     };
 
     const handleDelete = () => {
         const id = dialogExclusaoState.row?.id;
         if (!id) return;
-        setLoading(true);
         deleteEntity(id, () => {
             setDialogExclusaoState(prev => ({ ...prev, open: false, row: null }));
             handleList();
@@ -222,7 +219,6 @@ const BaseCrud = <
                 height={'calc(100vh - 180px)'}
                 page={page}
                 columns={columns}
-                loading={loading}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationModelChange}
                 sortModel={sortModel}
@@ -235,7 +231,7 @@ const BaseCrud = <
                 open: dialogDetailState.open,
                 onClose: () => {
                     setDialogDetailState(prev => ({ ...prev, open: false }));
-                    setCrudState(CrudAction.LIMPAR, { entidade: null, entidadeVisualizar: null });
+                    clearCrudState();
                 },
                 onConfirm: entidade => {
                     if (!crudState.entidade) {

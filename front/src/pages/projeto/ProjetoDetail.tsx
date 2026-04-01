@@ -25,7 +25,7 @@ const ProjetoDetail = (props: CrudDetailDialogProps<"projeto">) => {
             setTimeout(() => {
                 setLocalState(initialState);
             }, 100);
-        } else if (state.entidade) {
+        } else if (!!state.entidade) {
             setLocalState(state.entidade);
         }
     }, [props.open]);

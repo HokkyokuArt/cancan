@@ -3,6 +3,7 @@ package com.articos.cancan.common.exceptions.core;
 public enum ProblemaCode {
     ERRO_INTERNO,
     NAO_ENCONTRADO,
+    TOKEN_INVALIDO,
     DUPLICIDADE,
     RESPONSAVEL_NAO_PERTENCE_AO_PROJETO,
     MOVER_TAREFA,

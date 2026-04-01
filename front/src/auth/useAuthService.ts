@@ -26,14 +26,14 @@ const useAuthService = () => {
           navigate([RouterURL.PAINEL, RouterURL.INICIO]);
         },
         catch: (err) => {
-          console.log(err.body);
+          console.log(err);
         },
       });
     },
 
     deslogar() {
       dispatch(resetToken());
-      navigate([RouterURL.PAINEL, RouterURL.LOGIN]);
+      navigate([RouterURL.LOGIN]);
     },
 
     register(payload: RegisterPayload) {
@@ -44,7 +44,7 @@ const useAuthService = () => {
           console.log({ res });
         },
         catch: (err) => {
-          console.log(err.body);
+          console.log(err);
         },
       });
     },

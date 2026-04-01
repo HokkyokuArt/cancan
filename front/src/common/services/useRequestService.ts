@@ -1,23 +1,30 @@
 import {
+  AxiosError,
   AxiosHeaders,
   type AxiosRequestConfig,
   type AxiosResponse,
 } from "axios";
 import { axiosRequest } from "../../axios.config";
 import { useAppSelector } from "../../redux/store";
+import useLoading from "../hooks/useLoading";
+import { useSnack } from "../hooks/useSnack";
+import { ProblemaCode } from "../types/problemaCode";
 
 export type ThenCallBack<T> = (response: T) => void;
 
-export type RequestBaseParams<T> = {
+export type RequestBaseParams<T, ExtraError> = {
   url: string;
   params?: any;
   headers?: Record<string, unknown>;
   then: ThenCallBack<T>;
-  catch?: (erro: any) => void;
+  catch?: (erro: ProblemaDetalhe<ExtraError>) => void;
   // catch?: (erro: any, defaultErrorBehaviorCb: ()=> void)) => void;
 };
 
-export type RequestBodyParams<T> = RequestBaseParams<T> & {
+export type RequestBodyParams<T, ExtraError> = RequestBaseParams<
+  T,
+  ExtraError
+> & {
   body?: unknown;
 };
 
@@ -29,20 +36,40 @@ export enum RequestType {
   DELETE = "delete",
 }
 
+export type ProblemaDetalhe<ExtraError> = {
+  timestamp: Date;
+  status: number;
+  code: ProblemaCode;
+  error: string;
+  message: string;
+  path: string;
+  extra?: ExtraError;
+};
+
 const useRequestService = () => {
   const token = useAppSelector((s) => s.tokenState.token);
+  const { enableLoader, disabledLoader } = useLoading();
+  const { addError } = useSnack();
 
-  const _makeRequest = <T>(
-    params: RequestBodyParams<T>,
+  const _makeRequest = <T, ExtraError>(
+    params: RequestBodyParams<T, ExtraError>,
     requestType: RequestType,
   ): void => {
+    enableLoader();
     _getRequestByType(params, requestType)
-      .then((response) => params.then(response.data))
-      .catch((err) => params.catch?.(err));
+      .then((response) => {
+        params.then(response.data);
+      })
+      .catch(({ response }: AxiosError<ProblemaDetalhe<ExtraError>>) => {
+        const data = response!.data;
+        addError({ id: "error", message: data.message });
+        params.catch?.(data);
+      })
+      .finally(() => disabledLoader());
   };
 
-  const _getRequestByType = <T>(
-    params: RequestBodyParams<T>,
+  const _getRequestByType = <T, ExtraError>(
+    params: RequestBodyParams<T, ExtraError>,
     requestType: RequestType,
   ): Promise<AxiosResponse<T>> => {
     const url = `${axiosRequest.defaults.baseURL}${params.url}`;
@@ -60,8 +87,8 @@ const useRequestService = () => {
     }
   };
 
-  const _getExtraInfo = <T>(
-    params: RequestBodyParams<T>,
+  const _getExtraInfo = <T, ExtraError>(
+    params: RequestBodyParams<T, ExtraError>,
   ): AxiosRequestConfig => {
     const headers = new AxiosHeaders();
     if (!!token) {
@@ -74,24 +101,34 @@ const useRequestService = () => {
   };
 
   return {
-    getRequest: <T>(param: RequestBaseParams<T>): void => {
-      _makeRequest(param, RequestType.GET);
+    getRequest: <T, ExtraError = unknown>(
+      param: RequestBaseParams<T, ExtraError>,
+    ): void => {
+      _makeRequest<T, ExtraError>(param, RequestType.GET);
     },
 
-    postRequest: <T>(param: RequestBodyParams<T>): void => {
-      _makeRequest(param, RequestType.POST);
+    postRequest: <T, ExtraError = any>(
+      param: RequestBodyParams<T, ExtraError>,
+    ): void => {
+      _makeRequest<T, ExtraError>(param, RequestType.POST);
     },
 
-    putRequest: <T>(param: RequestBodyParams<T>): void => {
-      _makeRequest(param, RequestType.PUT);
+    putRequest: <T, ExtraError = any>(
+      param: RequestBodyParams<T, ExtraError>,
+    ): void => {
+      _makeRequest<T, ExtraError>(param, RequestType.PUT);
     },
 
-    patchRequest: <T>(param: RequestBodyParams<T>): void => {
-      _makeRequest(param, RequestType.PATCH);
+    patchRequest: <T, ExtraError = any>(
+      param: RequestBodyParams<T, ExtraError>,
+    ): void => {
+      _makeRequest<T, ExtraError>(param, RequestType.PATCH);
     },
 
-    deleteRequest: <T>(param: RequestBaseParams<T>): void => {
-      _makeRequest(param, RequestType.DELETE);
+    deleteRequest: <T, ExtraError = any>(
+      param: RequestBaseParams<T, ExtraError>,
+    ): void => {
+      _makeRequest<T, ExtraError>(param, RequestType.DELETE);
     },
   };
 };

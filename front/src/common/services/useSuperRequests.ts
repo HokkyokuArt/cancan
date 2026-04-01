@@ -1,3 +1,4 @@
+import { useSnack } from "../hooks/useSnack";
 import type { AbstractEntityDTO } from "../types/abstractEntity";
 import type {
   CrudDtoTypeMapKey,
@@ -17,6 +18,7 @@ type Props = {
 const useSuperRequests = <K extends CrudDtoTypeMapKey>(props: Props) => {
   const { getRequest, postRequest, putRequest, deleteRequest } =
     useRequestService();
+  const { addSuccess } = useSnack();
   return {
     pageable(
       filter: GenericFiltroDTO<K>,
@@ -82,7 +84,14 @@ const useSuperRequests = <K extends CrudDtoTypeMapKey>(props: Props) => {
       postRequest<GenericResponseDTO<K>>({
         url: props.url + "/create",
         body,
-        then,
+        then: (res) => {
+          addSuccess({
+            id: "salvo-com-sucesso",
+            message: "Criado com sucesso!",
+            closeable: true,
+          });
+          then(res);
+        },
       });
     },
 
@@ -93,14 +102,28 @@ const useSuperRequests = <K extends CrudDtoTypeMapKey>(props: Props) => {
       putRequest<GenericResponseDTO<K>>({
         url: props.url + "/update",
         body,
-        then,
+        then: (res) => {
+          addSuccess({
+            id: "editado-com-sucesso",
+            message: "Editado com sucesso!",
+            closeable: true,
+          });
+          then(res);
+        },
       });
     },
 
     delete: (id: UUID, then: ThenCallBack<GenericResponseDTO<K>>) => {
       deleteRequest<GenericResponseDTO<K>>({
         url: `${props.url}/delete/${id}`,
-        then,
+        then: (res) => {
+          addSuccess({
+            id: "exlcuido-com-sucesso",
+            message: "Excluído com sucesso!",
+            closeable: true,
+          });
+          then(res);
+        },
       });
     },
   };
