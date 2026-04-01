@@ -17,31 +17,16 @@ public class ProjetoFiltroDTO extends SuperFiltroDTO<Projeto> {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
 
-            if (this.busca != null) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("nome")),
-                                "%" + this.busca.toLowerCase() + "%"
-                        )
-                );
+            if (this.busca != null && !this.busca.isBlank()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")), "%" + this.busca.toLowerCase() + "%"));
             }
 
-            if (this.buscaSimples != null) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("nome")),
-                                "%" + this.buscaSimples.toLowerCase() + "%"
-                        )
-                );
+            if (this.buscaSimples != null && !this.buscaSimples.isBlank()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")), "%" + this.buscaSimples.toLowerCase() + "%"));
             }
 
-            if (this.nome != null) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("nome")),
-                                "%" + this.nome.toLowerCase() + "%"
-                        )
-                );
+            if (this.nome != null && !this.nome.isBlank()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")), "%" + this.nome.toLowerCase() + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

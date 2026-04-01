@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import type { GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 import { useEffect, useState, type JSX } from 'react';
 import useSuperRequests from '../common/services/useSuperRequests';
@@ -20,12 +20,20 @@ export enum CrudAction {
     CRIAR = "criar",
     EDITAR = "editar",
     LIMPAR = "limpar",
+    FILTRAR = 'filtrar',
 }
 export type CrudDetailDialogProps<K extends CrudDtoTypeMapKey> = {
     title: string,
     open: boolean,
     onClose: () => void;
     onConfirm: (entidade: GenericPayloadDTO<K>) => void;
+};
+
+export type CrudFiltroProps<K extends CrudDtoTypeMapKey> = {
+    open: boolean,
+    onClose: () => void;
+    onConfirm: (filtro: GenericFiltroDTO<K>) => void;
+    onClear: () => void;
 };
 
 type Props<
@@ -37,7 +45,7 @@ type Props<
     initialSort?: GridSortModel;
     onSetCrudState: (action: CrudAction, crudState: Partial<CrudState<K>>) => void;
     dialogDetail: (props: CrudDetailDialogProps<K>) => JSX.Element;
-    dialogFiltro: (props: { open: boolean, onClose: () => void; }) => JSX.Element;
+    dialogFiltro: (props: CrudFiltroProps<K>) => JSX.Element;
 };
 
 const BaseCrud = <
@@ -86,9 +94,9 @@ const BaseCrud = <
         sortModel
     ]);
 
-    const clearCrudState = () => {
+    const clearCrudState = (key: keyof CrudState<K>) => {
         setTimeout(() => {
-            setCrudState(CrudAction.LIMPAR, { entidade: null, entidadeVisualizar: null });
+            setCrudState(CrudAction.LIMPAR, { [key]: null });
         },);
     };
 
@@ -102,9 +110,9 @@ const BaseCrud = <
         );
     };
 
-    const handleList = () => {
+    const handleList = (filter: GenericFiltroDTO<K> = {}) => {
         pageable(
-            {} as GenericFiltroDTO<K>,
+            filter,
             Pageable.ofDataGridModel({ paginationModel, sortModel }),
             res => {
                 setPage(res);
@@ -123,7 +131,7 @@ const BaseCrud = <
         create(entidade, () => {
             setDialogDetailState(prev => ({ ...prev, open: false }));
             handleList();
-            clearCrudState();
+            clearCrudState('entidade');
         });
     };
 
@@ -131,7 +139,7 @@ const BaseCrud = <
         update(entidade, () => {
             setDialogDetailState(prev => ({ ...prev, open: false }));
             handleList();
-            clearCrudState();
+            clearCrudState('entidade');
         });
     };
 
@@ -194,15 +202,18 @@ const BaseCrud = <
                     onChange={v => handleBuscaGeral(v)}
                 />
 
-                <CustomButton
-                    color='primary'
-                    isIcon
-                    onClick={() =>
-                        setDialogFiltroState(prev => ({ ...prev, open: true }))
-                    }
-                >
-                    <FilterListIcon />
-                </CustomButton>
+                <Tooltip title="Filtros">
+                    <CustomButton
+                        color='primary'
+                        isIcon
+                        onClick={() =>
+                            setDialogFiltroState(prev => ({ ...prev, open: true }))
+                        }
+                    >
+                        <FilterListIcon />
+                    </CustomButton>
+                </Tooltip>
+
                 <CustomButton
                     color='primary'
                     endIcon={<AddIcon />}
@@ -212,7 +223,7 @@ const BaseCrud = <
                 >
                     Novo
                 </CustomButton>
-            </Box>
+            </Box >
 
             <CustomDataGrid<GenericListResponseDTO<K>>
                 height={'calc(100vh - 240px)'}
@@ -225,28 +236,41 @@ const BaseCrud = <
                 rowActions={[...baseActions, ...(actions ?? [])]}
             />
 
-            {dialogDetail({
-                title: !crudState.entidade ? 'Novo' : 'Editar',
-                open: dialogDetailState.open,
-                onClose: () => {
-                    setDialogDetailState(prev => ({ ...prev, open: false }));
-                    clearCrudState();
-                },
-                onConfirm: entidade => {
-                    if (!crudState.entidade) {
-                        handleCreate(entidade);
-                    } else {
-                        handleUpdate(entidade);
+            {
+                dialogDetail({
+                    title: !crudState.entidade ? 'Novo' : 'Editar',
+                    open: dialogDetailState.open,
+                    onClose: () => {
+                        setDialogDetailState(prev => ({ ...prev, open: false }));
+                        clearCrudState('entidade');
+                    },
+                    onConfirm: entidade => {
+                        if (!crudState.entidade) {
+                            handleCreate(entidade);
+                        } else {
+                            handleUpdate(entidade);
+                        }
                     }
-                }
-            })}
+                })
+            }
 
-            {dialogFiltro({
-                open: dialogFiltroState.open,
-                onClose: () => {
-                    setDialogFiltroState(prev => ({ ...prev, open: false }));
-                }
-            })}
+            {
+                dialogFiltro({
+                    open: dialogFiltroState.open,
+                    onClose: () => {
+                        setDialogFiltroState(prev => ({ ...prev, open: false }));
+                    },
+                    onConfirm: filtro => {
+                        setCrudState(CrudAction.FILTRAR, { filtro });
+                        handleList(filtro);
+                        setDialogFiltroState(prev => ({ ...prev, open: false }));
+                    },
+                    onClear: () => {
+                        clearCrudState('filtro');
+                        handleList();
+                    }
+                })
+            }
 
             <CustomDialog
                 open={dialogExclusaoState.open}

@@ -1,6 +1,6 @@
 package com.articos.cancan.domain.tarefa.dto;
 
-import com.articos.cancan.common.interfaces.*;
+import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.tarefa.*;
 import com.articos.cancan.domain.tarefa.prioridadetarefa.*;
 import com.articos.cancan.domain.tarefa.statustarefa.*;
@@ -13,34 +13,79 @@ import java.util.*;
 
 @Getter
 @Setter
-public class TarefaFiltroDTO implements Filtro<Tarefa> {
+public class TarefaFiltroDTO extends SuperFiltroDTO<Tarefa> {
     private StatusTarefa status;
     private PrioridadeTarefa prioridade;
     private UUID responsavel;
-    private List<LocalDate> datas;
+    private LocalDate criacaoInicio;
+    private LocalDate criacaoFim;
+    private LocalDate prazoInicio;
+    private LocalDate prazoFim;
 
     @Override
     public Specification<Tarefa> buildSpecification() {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
 
-            if (status != null) {
-                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            if (this.busca != null && !this.busca.isBlank()) {
+                String termo = "%" + this.busca.toLowerCase().trim() + "%";
+
+                Predicate tituloLike = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("titulo")),
+                        termo
+                );
+
+                Predicate descricaoLike = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("descricao")),
+                        termo
+                );
+
+                predicates.add(criteriaBuilder.or(tituloLike, descricaoLike));
             }
 
-            if (prioridade != null) {
-                predicates.add(criteriaBuilder.equal(root.get("prioridade"), prioridade));
+            if (this.status != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), this.status));
             }
 
-            if (responsavel != null) {
-                predicates.add(criteriaBuilder.equal(root.get("responsavel").get("id"), responsavel));
+            if (this.prioridade != null) {
+                predicates.add(criteriaBuilder.equal(root.get("prioridade"), this.prioridade));
             }
 
-            if (datas != null && !datas.isEmpty()) {
-                predicates.add(root.get("dataCriacao").in(datas));
+            if (this.responsavel != null) {
+                predicates.add(criteriaBuilder.equal(root.get("responsavel").get("id"), this.responsavel));
             }
+
+            predicateRangeDate(this.criacaoInicio, this.criacaoFim, root.get("dataCriacao"), criteriaBuilder, predicates);
+            predicateRangeDate(this.prazoInicio, this.prazoFim, root.get("prazo"), criteriaBuilder, predicates);
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private static void predicateRangeDate(LocalDate inicio, LocalDate fim, Path<LocalDate> path, CriteriaBuilder criteriaBuilder,
+                                           ArrayList<Predicate> predicates) {
+        if (inicio != null && fim != null) {
+            predicates.add(
+                    criteriaBuilder.between(
+                            path,
+                            inicio,
+                            fim
+                    )
+            );
+        } else if (inicio != null) {
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(
+                            path,
+                            inicio
+                    )
+            );
+        } else if (fim != null) {
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            path,
+                            fim
+                    )
+            );
+        }
     }
 }

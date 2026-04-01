@@ -4,6 +4,7 @@ import type { CrudState } from "../../common/types/crudState";
 const initialState: CrudState<"projeto"> = {
   entidade: null,
   entidadeVisualizar: null,
+  filtro: null,
 };
 
 const projetoSlice = createSlice({

@@ -2,16 +2,16 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { CrudState } from "../../common/types/crudState";
 import { OrderDirection } from "../../common/types/pageable";
-import CustomDialog from "../../components/CustomDialog";
 import BaseCrud, { CrudAction } from "../../layout/BaseCrud";
 import { setTarefaState } from "../../redux/features/tarefaSlice";
 import { useAppDispatch } from "../../redux/store";
-import TarefaDetail from "./TarefaDetail";
 import type { TarefaListDTO } from "./tarefa.model";
+import TarefaDetail from "./TarefaDetail";
+import TarefaFiltro from './TarefaFiltro';
 
 const prioridadeIconInfoMap = {
     LOW: <KeyboardArrowDownIcon color="secondary" />,
@@ -27,17 +27,18 @@ const columns: GridColDef<TarefaListDTO>[] = [
         sortable: true,
         headerAlign: 'center',
         width: 150,
-        renderCell: (params) => {
-            return <Box
-                sx={{
-                    display: 'grid',
-                    placeItems: 'center',
-                    height: '100%'
-                }}
-            >
-                {prioridadeIconInfoMap[params.value as keyof typeof prioridadeIconInfoMap]}
-            </Box>;
-        },
+        renderCell: (params) =>
+            <Tooltip title={params.value} placement="right">
+                <Box
+                    sx={{
+                        display: 'grid',
+                        placeItems: 'center',
+                        height: '100%'
+                    }}
+                >
+                    {prioridadeIconInfoMap[params.value as keyof typeof prioridadeIconInfoMap]}
+                </Box>
+            </Tooltip>
     },
     {
         field: 'codigo',
@@ -95,11 +96,7 @@ const Tarefa = () => {
                 }
             ]}
             dialogDetail={props => <TarefaDetail {...props} />}
-            dialogFiltro={props => <CustomDialog
-                {...props}
-                title={"Filtro"}
-                content={<>AAAAAAAAAAAA</>}
-            />}
+            dialogFiltro={props => <TarefaFiltro {...props} />}
         />
     );
 };

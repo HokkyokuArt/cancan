@@ -4,6 +4,7 @@ import type { CrudState } from "../../common/types/crudState";
 const initialState: CrudState<"tarefa"> = {
   entidade: null,
   entidadeVisualizar: null,
+  filtro: null,
 };
 
 const tarefaSlice = createSlice({

@@ -41,10 +41,14 @@ const EnumAutocomplete = (props: Props) => {
                         if (!found) throw new Error('Enum não existe: ' + v);
                         return found;
                     }));
+                } else {
+                    setTimeout(() => {
+                        setValue([]);
+                    },);
                 }
             }
         });
-    }, []);
+    }, [props.value]);
 
     const handleSelect = (value: AbstractEnumDTO | AbstractEnumDTO[] | null) => {
         const v = Array.isArray(value) ? value : (!value ? [] : [value]);

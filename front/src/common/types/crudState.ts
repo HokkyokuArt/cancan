@@ -42,4 +42,5 @@ export type GenericFiltroDTO<K extends CrudDtoTypeMapKey> =
 export type CrudState<K extends CrudDtoTypeMapKey> = {
   entidade: GenericPayloadDTO<K> | null;
   entidadeVisualizar: GenericResponseDTO<K> | null;
+  filtro: GenericFiltroDTO<K> | null;
 };

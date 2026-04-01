@@ -101,7 +101,7 @@ const TarefaDetail = (props: CrudDetailDialogProps<"tarefa">) => {
             <EnumAutocomplete
                 id='prioridade'
                 label='Prioridade'
-                value={!state ? 'TODO' : localState.prioridade}
+                value={localState.prioridade}
                 enumName='PrioridadeTarefa'
                 disabled={!isNew && state.entidade?.prioridade === 'CRITICAL' && !isAdmin()}
                 onSelect={val =>
@@ -138,67 +138,6 @@ const TarefaDetail = (props: CrudDetailDialogProps<"tarefa">) => {
                     }
                 }}
             />
-            {/* <CustomInput
-                label="Nome"
-                id="nome"
-                value={localState?.nome}
-                onChange={handleChangeInput}
-                slotProps={{
-                    htmlInput: {
-                        maxLength: 30
-                    }
-                }}
-            />
-
-            <CustomInput
-                id="sigla"
-                label="Sigla"
-                value={localState?.sigla}
-                onChange={handleChangeInput}
-                slotProps={{
-                    htmlInput: {
-                        maxLength: 3
-                    }
-                }}
-            />
-
-            <CustomInput
-                id="descricao"
-                label="Descrição"
-                value={localState?.descricao}
-                onChange={handleChangeInput}
-                slotProps={{
-                    htmlInput: {
-                        maxLength: 100
-                    }
-                }}
-            />
-
-            <CustomAutocomplete<UsuarioFiltroDTO>
-                id="dono"
-                label="Dono"
-                isAsync
-                path="/usuario"
-                value={localState.dono}
-                onSelect={val => {
-                    handleChangeInput(val ?? undefined, 'dono');
-                }}
-                extraCriterias={{
-                    roles: [Role.ROLE_ADMIN]
-                }}
-            />
-
-            <CustomAutocomplete
-                id="membros"
-                label="Membros"
-                isAsync
-                path="/usuario"
-                multiple
-                value={localState.membros}
-                onSelect={val => {
-                    handleChangeInput(val, 'membros');
-                }}
-            /> */}
         </>}
         onConfirm={() => props.onConfirm(localState)}
     />);

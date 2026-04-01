@@ -2,6 +2,7 @@ import type {
   AbstractEntityDTO,
   SuperPayloadResponseDTO,
 } from "../../common/types/abstractEntity";
+import type { Filter } from "../../common/types/pageable";
 import type { UUID } from "../../common/types/uuid";
 
 export type TarefaPayloadDTO = SuperPayloadResponseDTO & {
@@ -37,9 +38,12 @@ export type TarefaListDTO = AbstractEntityDTO & {
   dataCriacao: string;
 };
 
-export type TarefaFiltroDTO = {
-  status?: string;
-  prioridade?: string;
-  responsavel?: UUID;
-  datas?: Date[];
+export type TarefaFiltroDTO = Filter & {
+  status?: string | null;
+  prioridade?: string | null;
+  responsavel?: UUID | null;
+  criacaoInicio?: Date | null;
+  criacaoFim?: Date | null;
+  prazoInicio?: Date | null;
+  prazoFim?: Date | null;
 };

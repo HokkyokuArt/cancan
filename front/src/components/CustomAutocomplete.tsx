@@ -49,10 +49,14 @@ const CustomAutocomplete = <F extends Filter = Filter>(props: Props<F>) => {
             if (!!props.value) {
                 findAbstractEntity(props.multiple ? props.value : [props.value],
                     res => setValue(res));
+            } else {
+                setTimeout(() => {
+                    setValue([]);
+                },);
             }
             handleInputChange('');
         }
-    }, []);
+    }, [props.value]);
 
     const handleInputChange = (busca: string) => {
         const pageable = Pageable.of({

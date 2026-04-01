@@ -8,7 +8,7 @@ export type CustomDialogProps = {
     title: string;
     onConfirm?: () => void;
     content: JSX.Element;
-    actions?: (onClose: () => void) => JSX.Element;
+    actions?: (onClose: () => void, isMobile: boolean) => JSX.Element;
     maxWidth?: Breakpoint;
 };
 
@@ -44,7 +44,7 @@ const CustomDialog = (props: CustomDialogProps) => {
 
                 <DialogActions sx={{ width: 'calc(100% - 42px)', pb: '20px', px: '20px', position: isMobile ? 'fixed' : '', bottom: 0 }}>
                     {
-                        props.actions?.(props.onClose)
+                        props.actions?.(props.onClose, isMobile)
                         ?? <Box sx={{
                             display: 'flex',
                             justifyContent: isMobile ? 'flex-end' : 'space-between',
