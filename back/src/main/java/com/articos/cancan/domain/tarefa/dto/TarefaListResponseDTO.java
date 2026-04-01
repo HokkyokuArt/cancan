@@ -15,6 +15,7 @@ public class TarefaListResponseDTO extends AbstractEntityDTO {
     private final String prioridade;
     private final String responsavel;
     private final String prazo;
+    private final String dataCriacao;
 
     public TarefaListResponseDTO(Tarefa entity) {
         super(entity);
@@ -24,5 +25,6 @@ public class TarefaListResponseDTO extends AbstractEntityDTO {
         this.prioridade = entity.getPrioridade().getDescritivo();
         this.responsavel = entity.getResponsavel().getDescritivo();
         this.prazo = DateUtils.displayPattern(entity.getPrazo());
+        this.dataCriacao = DateUtils.displayPattern(entity.getDataCriacao().toLocalDate());
     }
 }

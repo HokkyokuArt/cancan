@@ -11,7 +11,7 @@ export type TarefaPayloadDTO = SuperPayloadResponseDTO & {
   prioridade: string;
   responsavel: UUID;
   projeto: UUID;
-  prazo: Date;
+  prazo: Date | null;
 };
 
 export type TarefaResponseDTO = SuperPayloadResponseDTO & {
@@ -34,6 +34,7 @@ export type TarefaListDTO = AbstractEntityDTO & {
   prioridade: string;
   responsavel: string;
   prazo: string;
+  dataCriacao: string;
 };
 
 export type TarefaFiltroDTO = {

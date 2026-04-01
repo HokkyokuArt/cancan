@@ -65,6 +65,11 @@ const columns: GridColDef<TarefaListDTO>[] = [
         width: 200,
     },
     {
+        field: 'dataCriacao',
+        headerName: 'Criação',
+        sortable: true,
+    },
+    {
         field: 'prazo',
         headerName: 'Prazo',
         sortable: true,

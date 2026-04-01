@@ -1,3 +1,5 @@
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import useAuthService from '../../auth/useAuthService';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
@@ -17,7 +19,7 @@ const initialState: TarefaPayloadDTO = {
     descricao: "",
     status: "TODO",
     prioridade: "",
-    prazo: new Date(),
+    prazo: null
 };
 
 const TarefaDetail = (props: CrudDetailDialogProps<"tarefa">) => {
@@ -105,6 +107,21 @@ const TarefaDetail = (props: CrudDetailDialogProps<"tarefa">) => {
                 onSelect={val =>
                     handleChangeInput(val ?? undefined, 'prioridade')
                 }
+            />
+
+            <DatePicker
+                label="Data"
+                value={localState.prazo ? dayjs(localState.prazo) : null}
+                onChange={(newValue) => {
+                    handleChangeInput(newValue ? newValue.toDate() : undefined, 'prazo');
+                }}
+                disablePast
+                format="DD/MM/YYYY"
+                slotProps={{
+                    textField: {
+                        variant: 'standard',
+                    },
+                }}
             />
 
             <CustomInput

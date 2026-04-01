@@ -26,7 +26,7 @@ public class AuthService {
             throw new DuplicidadeException("Email já cadastrado");
         }
         Usuario usuario = new Usuario();
-        usuario.setNome(request.nome());
+        usuario.setNome(request.nome().toUpperCase());
         usuario.setEmail(request.email());
         usuario.setSenha(passwordEncoder.encode(request.senha()));
         return usuarioRepository.save(usuario);

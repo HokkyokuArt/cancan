@@ -48,8 +48,8 @@ public class Projeto extends SuperEntity<ProjetoPayloadDTO, ProjetoPayloadDTO, P
     }
 
     public void setValues(ProjetoPayloadDTO dto, Usuario dono, Set<Usuario> membros) {
-        this.nome = dto.getNome();
-        this.sigla = dto.getSigla();
+        this.nome = dto.getNome().toUpperCase();
+        this.sigla = dto.getSigla().toUpperCase();
         this.descricao = dto.getDescricao();
         this.dono = dono;
         this.membros = membros;

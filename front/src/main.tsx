@@ -9,7 +9,8 @@ import BlockUI from './layout/BlockUI.tsx';
 import { store } from './redux/store.ts';
 import './reset.css';
 import { router } from './routes.tsx';
-
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
   fontFamily: '"Poppins", "Roboto", sans-serif',
   letterSpacing: '1px'
@@ -18,27 +19,29 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <SnackbarProvider
-        dense={false}
-        maxSnack={7}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        TransitionComponent={(props: SlideProps) => (
-          <Slide
-            {...props}
-            direction='left'
-          />
-        )}
-        Components={{
-          default: StyledMaterialDesignContent,
-          success: StyledMaterialDesignContent,
-          error: StyledMaterialDesignContent,
-          warning: StyledMaterialDesignContent,
-          info: StyledMaterialDesignContent,
-        }}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <SnackbarProvider
+          dense={false}
+          maxSnack={7}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          TransitionComponent={(props: SlideProps) => (
+            <Slide
+              {...props}
+              direction='left'
+            />
+          )}
+          Components={{
+            default: StyledMaterialDesignContent,
+            success: StyledMaterialDesignContent,
+            error: StyledMaterialDesignContent,
+            warning: StyledMaterialDesignContent,
+            info: StyledMaterialDesignContent,
+          }}>
 
-        <BlockUI />
-        <RouterProvider router={router} />
-      </SnackbarProvider>
+          <BlockUI />
+          <RouterProvider router={router} />
+        </SnackbarProvider>
+      </LocalizationProvider>
     </Provider>
   </StrictMode>,
 );

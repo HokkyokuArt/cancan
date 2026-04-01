@@ -65,9 +65,9 @@ public class Tarefa extends SuperEntity<TarefaPayloadDTO, TarefaResponseDTO, Tar
     }
 
     public void setValues(TarefaPayloadDTO dto, Usuario responsavel, Projeto projeto, Integer proximoNumero) {
-        this.titulo = dto.getTitulo();
+        this.titulo = dto.getTitulo().toUpperCase();
         this.sequencial = proximoNumero;
-        this.codigo = String.format("%s-%s", projeto.getSigla(), proximoNumero);
+        this.codigo = String.format("%s-%s", projeto.getSigla(), proximoNumero).toUpperCase();
         this.descricao = dto.getDescricao();
         if (dto.getId() != null) {
             this.status = dto.getStatus();
