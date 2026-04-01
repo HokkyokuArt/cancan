@@ -44,7 +44,8 @@ public abstract class SuperRestController<
             @RequestBody FILTRO filtro,
             @ParameterObject Pageable pageable
     ) {
-        Page<ENTIDADE> list = service.list(filtro.buildSpecification(), pageable);
+        FILTRO novoFiltro = enriquecerFiltro(filtro);
+        Page<ENTIDADE> list = service.list(novoFiltro.buildSpecification(), pageable);
         Page<AbstractEntityDTO> toReturn = list.map(AbstractEntityDTO::new);
         return ResponseEntity.ok(toReturn);
     }
@@ -66,7 +67,8 @@ public abstract class SuperRestController<
             @RequestBody FILTRO filtro,
             @ParameterObject Pageable pageable
     ) {
-        Page<ENTIDADE> list = service.list(filtro.buildSpecification(), pageable);
+        FILTRO novoFiltro = enriquecerFiltro(filtro);
+        Page<ENTIDADE> list = service.list(novoFiltro.buildSpecification(), pageable);
         Page<LIST_RESPONSE_DTO> toReturn = list.map(DtoConvertible::toListDTO);
         return ResponseEntity.ok(toReturn);
     }
@@ -86,6 +88,7 @@ public abstract class SuperRestController<
             @PathVariable UUID id
     ) {
         ENTIDADE entity = service.loadWithException(id, "buscar");
+        validator.validateView(entity);
         RESPONSE_DTO toReturn = entity.toResponseDTO();
         return ResponseEntity.ok(toReturn);
     }
@@ -123,6 +126,7 @@ public abstract class SuperRestController<
             @PathVariable UUID id
     ) {
         ENTIDADE entity = service.loadWithException(id, "buscar para editar");
+        validator.validateView(entity);
         PAYLOAD_DTO toReturn = entity.toPayloadDTO();
         return ResponseEntity.ok(toReturn);
     }
@@ -197,6 +201,10 @@ public abstract class SuperRestController<
         ENTIDADE deleted = service.delete(entity);
         PAYLOAD_DTO toReturn = deleted.toPayloadDTO();
         return ResponseEntity.ok(toReturn);
+    }
+
+    protected FILTRO enriquecerFiltro(FILTRO filtro) {
+        return filtro;
     }
 
     protected abstract void updateValues(ENTIDADE entidade, PAYLOAD_DTO dto);

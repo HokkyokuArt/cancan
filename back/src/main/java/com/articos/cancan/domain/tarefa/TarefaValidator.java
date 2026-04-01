@@ -32,6 +32,18 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
         validateAtingiuMaximoTarefasInProgress(entityAntiga, dto);
     }
 
+    @Override
+    protected void validateView(Tarefa entity) {
+        UUID usuarioAtualId = getUsuarioAtual();
+        if (usuarioRepository.isAdmin(usuarioAtualId))
+            return;
+
+        boolean pertenceAoProjeto = entity.getProjeto().getMembros().stream().anyMatch(s -> s.getId().equals(usuarioAtualId));
+        if (!pertenceAoProjeto) {
+            throw new UsuarioSemAcessoATarefaException();
+        }
+    }
+
     protected static void validateResponsavelNaoEstaNoProjeto(Tarefa entity) {
         if (usuarioLogadoEhDonoDoProjeto(entity.getProjeto().getDono().getId()))
             return;

@@ -21,6 +21,8 @@ public class TarefaFiltroDTO extends SuperFiltroDTO<Tarefa> {
     private LocalDate criacaoFim;
     private LocalDate prazoInicio;
     private LocalDate prazoFim;
+    private Boolean isAdmin;
+    private UUID usuarioAtual;
 
     @Override
     public Specification<Tarefa> buildSpecification() {
@@ -57,6 +59,13 @@ public class TarefaFiltroDTO extends SuperFiltroDTO<Tarefa> {
 
             predicateRangeDate(this.criacaoInicio, this.criacaoFim, root.get("dataCriacao"), criteriaBuilder, predicates);
             predicateRangeDate(this.prazoInicio, this.prazoFim, root.get("prazo"), criteriaBuilder, predicates);
+
+            if (!Boolean.TRUE.equals(this.isAdmin) && this.usuarioAtual != null) {
+                query.distinct(true);
+                Join<Object, Object> projetoJoin = root.join("projeto");
+                Join<Object, Object> membrosJoin = projetoJoin.join("membros");
+                predicates.add(criteriaBuilder.equal(membrosJoin.get("id"), this.usuarioAtual));
+            }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

@@ -281,4 +281,63 @@ class TarefaValidatorTest {
 
         verify(repository, never()).countByResponsavelIdAndStatus(any(), any());
     }
+
+    @Test
+    public void validateView_NAO_quebra_quando_usuarioForAdmin() {
+        UUID usuarioAtual = UUID.randomUUID();
+
+        Tarefa tarefa = mock(Tarefa.class);
+
+        try (MockedStatic<AuthContext> authContextMock = mockStatic(AuthContext.class)) {
+            authContextMock.when(AuthContext::getUsuarioAtual).thenReturn(usuarioAtual);
+            when(usuarioRepository.isAdmin(usuarioAtual)).thenReturn(true);
+
+            assertThatCode(() -> validator.validateView(tarefa))
+                    .doesNotThrowAnyException();
+        }
+    }
+
+    @Test
+    public void validateView_NAO_quebra_quando_usuarioPertencerAoProjetoDaTarefa() {
+        UUID usuarioAtual = UUID.randomUUID();
+
+        Usuario usuario = mock(Usuario.class);
+        when(usuario.getId()).thenReturn(usuarioAtual);
+
+        Projeto projeto = mock(Projeto.class);
+        when(projeto.getMembros()).thenReturn(Set.of(usuario));
+
+        Tarefa tarefa = mock(Tarefa.class);
+        when(tarefa.getProjeto()).thenReturn(projeto);
+
+        try (MockedStatic<AuthContext> authContextMock = mockStatic(AuthContext.class)) {
+            authContextMock.when(AuthContext::getUsuarioAtual).thenReturn(usuarioAtual);
+            when(usuarioRepository.isAdmin(usuarioAtual)).thenReturn(false);
+
+            assertThatCode(() -> validator.validateView(tarefa))
+                    .doesNotThrowAnyException();
+        }
+    }
+
+    @Test
+    public void validateView_quebra_quando_usuario_NAO_PertencerAoProjetoDaTarefa() {
+        UUID usuarioAtual = UUID.randomUUID();
+
+        Usuario outroUsuario = mock(Usuario.class);
+        when(outroUsuario.getId()).thenReturn(UUID.randomUUID());
+
+        Projeto projeto = mock(Projeto.class);
+        when(projeto.getMembros()).thenReturn(Set.of(outroUsuario));
+
+        Tarefa tarefa = mock(Tarefa.class);
+        when(tarefa.getProjeto()).thenReturn(projeto);
+
+        try (MockedStatic<AuthContext> authContextMock = mockStatic(AuthContext.class)) {
+            authContextMock.when(AuthContext::getUsuarioAtual).thenReturn(usuarioAtual);
+            when(usuarioRepository.isAdmin(usuarioAtual)).thenReturn(false);
+
+            assertThatThrownBy(() -> validator.validateView(tarefa))
+                    .isInstanceOf(UsuarioSemAcessoATarefaException.class);
+        }
+    }
 }
