@@ -10,7 +10,7 @@ import BaseLayoutAuthForm from "../../layout/BaseLayoutAuthForm";
 const Login = () => {
     const { logar } = useAuthService();
     const [localState, setLocalState] = useState({ showPassword: false });
-    const [loginState, setLoginState] = useState<LoginPayload>({ email: 'admin@admin', senha: '13241324' });
+    const [loginState, setLoginState] = useState<LoginPayload>({ email: '', senha: '' });
 
     const handleClickLogin = () => {
         logar(loginState);
