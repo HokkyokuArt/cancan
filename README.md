@@ -323,6 +323,30 @@ Esse tipo de auditoria cresce exponencialmente em volume, mas para um projeto pe
 ### Motivo de não implementar
 Por questão de priorização, foi mais importante focar na construção da aplicação principal e na organização do código.
 
+## Documentação da API com Swagger / OpenAPI
+
+O projeto utiliza Swagger/OpenAPI para documentar os endpoints e facilitar tanto o desenvolvimento quanto a avaliação da API.
+
+### Motivo
+A ideia foi tornar o consumo da API mais claro, permitindo visualizar rotas, parâmetros, payloads, autenticação e respostas de forma centralizada.
+
+### Vantagens
+- Facilita testes manuais.
+- Melhora a compreensão dos contratos da API.
+- Ajuda na manutenção e evolução do back-end.
+- Torna a avaliação do projeto mais simples.
+
+### Tradeoffs
+- Requer esforço adicional de documentação.
+- Precisa ser mantido em conjunto com a implementação para evitar inconsistências.
+
+### Como acessar
+Com o back-end em execução, a documentação pode ser acessada no navegador pela URL:
+
+```bash
+http://localhost:8080/swagger-ui/index.html
+```
+
 # 3. O que eu faria diferente com mais tempo
 
 Se houvesse mais tempo para evoluir o projeto, os próximos passos seriam os seguintes.
