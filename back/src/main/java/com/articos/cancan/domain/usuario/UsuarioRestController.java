@@ -21,7 +21,7 @@ public class UsuarioRestController extends SuperRestController<
         UsuarioPayloadDTO,
         UsuarioResponseDTO,
         UsuarioFiltroDTO,
-        AbstractEntityDTO
+        UsuarioListResponseDTO
         > {
 
     private final PasswordEncoder passwordEncoder;
@@ -44,7 +44,7 @@ public class UsuarioRestController extends SuperRestController<
     @Override
     @AdminOnly
     @PostMapping("pageable")
-    public ResponseEntity<Page<AbstractEntityDTO>> pageable(UsuarioFiltroDTO filtro, Pageable pageable) {
+    public ResponseEntity<Page<UsuarioListResponseDTO>> pageable(UsuarioFiltroDTO filtro, Pageable pageable) {
         return super.pageable(filtro, pageable);
     }
 

@@ -1,7 +1,7 @@
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import useAuthService from '../auth/useAuthService';
 import useCustomNavigate from '../common/hooks/useCustomNavigate';
 import { RouterURL } from '../common/types/routerUrl';
-import useAuthService from '../auth/useAuthService';
 
 
 const menuWidth = 240;
@@ -11,11 +11,6 @@ const menuItens = [
         label: 'HOME',
         routes: [RouterURL.HOME],
     },
-    // {
-    //     id: RouterURL.REGISTER,
-    //     label: 'REGISTER',
-    //     routes: [RouterURL.PAINEL, RouterURL.REGISTER],
-    // },
     {
         id: RouterURL.INICIO,
         label: 'INICIO',
@@ -30,6 +25,12 @@ const menuItens = [
         id: RouterURL.TAREFA,
         label: 'TAREFA',
         routes: [RouterURL.PAINEL, RouterURL.TAREFA],
+    },
+
+    {
+        id: RouterURL.USUARIO,
+        label: 'USUÁRIO',
+        routes: [RouterURL.PAINEL, RouterURL.USUARIO],
     },
 ];
 

@@ -9,6 +9,11 @@ import type {
   TarefaPayloadDTO,
   TarefaResponseDTO,
 } from "../../pages/tarefa/tarefa.model";
+import type {
+  UsuarioFiltroDTO,
+  UsuarioListResponseDTO,
+  UsuarioPayloadDTO,
+} from "../../pages/usuario/usuario.model";
 
 export type CrudDtoTypeMap = {
   projeto: {
@@ -22,6 +27,12 @@ export type CrudDtoTypeMap = {
     RESPONSE_DTO: TarefaResponseDTO;
     LIST_RESPONSE_DTO: TarefaListDTO;
     FILTRO_DTO: TarefaFiltroDTO;
+  };
+  usuario: {
+    PAYLOAD_DTO: UsuarioPayloadDTO;
+    RESPONSE_DTO: TarefaResponseDTO;
+    LIST_RESPONSE_DTO: UsuarioListResponseDTO;
+    FILTRO_DTO: UsuarioFiltroDTO;
   };
 };
 

@@ -6,8 +6,8 @@ import Home from "./pages/home/Home";
 import Inicio from "./pages/inicio/Inicio";
 import Login from "./pages/login/Login";
 import ProjetoList from "./pages/projeto/ProjetoList";
-import Register from "./pages/register/Register";
-import Tarefa from "./pages/tarefa/TarefaList";
+import TarefaList from "./pages/tarefa/TarefaList";
+import UsuarioList from "./pages/usuario/UsuarioList";
 import Guard from "./security/Guard";
 import ProtectedRoute from "./security/ProtectedRoute";
 
@@ -42,14 +42,14 @@ export const router = createBrowserRouter([
       {
         element: <ProtectedRoute allowedRole={Role.ROLE_MEMBER} />,
         children: [
-          { path: RouterURL.TAREFA, element: <Tarefa />, }
+          { path: RouterURL.TAREFA, element: <TarefaList />, }
         ]
       },
 
       {
         element: <ProtectedRoute allowedRole={Role.ROLE_ADMIN} />,
         children: [
-          { path: RouterURL.REGISTER, element: <Register /> },
+          { path: RouterURL.USUARIO, element: <UsuarioList /> },
         ]
       },
     ]

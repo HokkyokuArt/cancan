@@ -1,7 +1,6 @@
 import type { GridColDef } from "@mui/x-data-grid";
 import type { CrudState } from "../../common/types/crudState";
 import { OrderDirection } from "../../common/types/pageable";
-import CustomDialog from "../../components/CustomDialog";
 import BaseCrud, { CrudAction } from "../../layout/BaseCrud";
 import { setProjetoState } from "../../redux/features/projetoSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -40,6 +39,7 @@ const Projeto = () => {
             entityName="projeto"
             onSetCrudState={handleSetState}
             columns={columns}
+            chipsConfig={{}}
             initialSort={[
                 {
                     field: 'nome',
@@ -47,11 +47,6 @@ const Projeto = () => {
                 }
             ]}
             dialogDetail={props => <ProjetoDetail {...props} />}
-            dialogFiltro={props => <CustomDialog
-                {...props}
-                title={"Filtro"}
-                content={<>AAAAAAAAAAAA</>}
-            />}
         />
     );
 };

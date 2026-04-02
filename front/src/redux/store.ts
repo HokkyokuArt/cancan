@@ -8,6 +8,7 @@ import { blockUIReducer } from "./features/blockUISlice";
 import { projetoReducer } from "./features/projetoSlice";
 import { tarefaReducer } from "./features/tarefaSlice";
 import { tokenReducer } from "./features/tokenSlice";
+import { usuarioReducer } from "./features/usuarioSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     tokenState: tokenReducer,
     projetoState: projetoReducer,
     tarefaState: tarefaReducer,
+    usuarioState: usuarioReducer,
   },
 });
 

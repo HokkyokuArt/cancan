@@ -48,7 +48,7 @@ type Props<
     chipsConfig: ChipsConfig<K>;
     onSetCrudState: (action: CrudAction, crudState: Partial<CrudState<K>>) => void;
     dialogDetail: (props: CrudDetailDialogProps<K>) => JSX.Element;
-    dialogFiltro: (props: CrudFiltroProps<K>) => JSX.Element;
+    dialogFiltro?: (props: CrudFiltroProps<K>) => JSX.Element;
 };
 
 const BaseCrud = <
@@ -221,17 +221,19 @@ const BaseCrud = <
                     onChange={v => handleBuscaGeral(v)}
                 />
 
-                <Tooltip title="Filtros">
-                    <CustomButton
-                        color='primary'
-                        isIcon
-                        onClick={() =>
-                            setDialogFiltroState(prev => ({ ...prev, open: true }))
-                        }
-                    >
-                        <FilterListIcon />
-                    </CustomButton>
-                </Tooltip>
+                {!!dialogFiltro &&
+                    <Tooltip title="Filtros">
+                        <CustomButton
+                            color='primary'
+                            isIcon
+                            onClick={() =>
+                                setDialogFiltroState(prev => ({ ...prev, open: true }))
+                            }
+                        >
+                            <FilterListIcon />
+                        </CustomButton>
+                    </Tooltip>
+                }
 
                 <CustomButton
                     color='primary'
@@ -276,7 +278,7 @@ const BaseCrud = <
             }
 
             {
-                dialogFiltro({
+                dialogFiltro?.({
                     open: dialogFiltroState.open,
                     onClose: () => {
                         setDialogFiltroState(prev => ({ ...prev, open: false }));

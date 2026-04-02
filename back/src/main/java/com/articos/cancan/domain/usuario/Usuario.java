@@ -1,6 +1,5 @@
 package com.articos.cancan.domain.usuario;
 
-import com.articos.cancan.common.*;
 import com.articos.cancan.common.annotations.*;
 import com.articos.cancan.common.crud.*;
 import com.articos.cancan.domain.usuario.dto.*;
@@ -14,7 +13,7 @@ import lombok.*;
 @Getter
 @Setter
 @EntidadeFrontFriendly(nome = "Usuário", artigo = Artigo.MASCULINO)
-public class Usuario extends SuperEntity<UsuarioPayloadDTO, UsuarioResponseDTO, AbstractEntityDTO> {
+public class Usuario extends SuperEntity<UsuarioPayloadDTO, UsuarioResponseDTO, UsuarioListResponseDTO> {
     @Column(nullable = false, length = 100)
     private String nome;
 
@@ -47,7 +46,7 @@ public class Usuario extends SuperEntity<UsuarioPayloadDTO, UsuarioResponseDTO, 
     }
 
     @Override
-    public AbstractEntityDTO toListDTO() {
-        return new AbstractEntityDTO(this);
+    public UsuarioListResponseDTO toListDTO() {
+        return new UsuarioListResponseDTO(this);
     }
 }

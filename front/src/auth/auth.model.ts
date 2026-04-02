@@ -5,10 +5,6 @@ export type LoginPayload = {
   senha: string;
 };
 
-export type RegisterPayload = LoginPayload & {
-  nome: string;
-};
-
 export type TokenResponse = {
   token: string;
   role: Role | null;

@@ -42,7 +42,6 @@ const Login = () => {
         />
 
         <Button type='submit'>Logar</Button>
-        {/* <Button onClick={() => navigate(RouterURL.REGISTER)}>Ainda não tem uma conta?<Box paddingX={1}>Criar</Box></Button> */}
     </BaseLayoutAuthForm>;
 };
 
