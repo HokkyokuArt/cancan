@@ -1,6 +1,7 @@
 package com.articos.cancan.domain.tarefa;
 
 import com.articos.cancan.common.crud.*;
+import com.articos.cancan.common.exceptions.core.*;
 import com.articos.cancan.common.exceptions.tarefa.*;
 import com.articos.cancan.domain.tarefa.dto.*;
 import com.articos.cancan.domain.tarefa.statustarefa.*;
@@ -40,7 +41,7 @@ public class TarefaValidator extends SuperValidator<Tarefa, TarefaPayloadDTO> {
 
         boolean pertenceAoProjeto = entity.getProjeto().getMembros().stream().anyMatch(s -> s.getId().equals(usuarioAtualId));
         if (!pertenceAoProjeto) {
-            throw new UsuarioSemAcessoATarefaException();
+            throw new UsuarioSemAcessoException();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.articos.cancan.domain.tarefa;
 
+import com.articos.cancan.common.exceptions.core.*;
 import com.articos.cancan.common.exceptions.tarefa.*;
 import com.articos.cancan.domain.auth.*;
 import com.articos.cancan.domain.projeto.*;
@@ -337,7 +338,7 @@ class TarefaValidatorTest {
             when(usuarioRepository.isAdmin(usuarioAtual)).thenReturn(false);
 
             assertThatThrownBy(() -> validator.validateView(tarefa))
-                    .isInstanceOf(UsuarioSemAcessoATarefaException.class);
+                    .isInstanceOf(UsuarioSemAcessoException.class);
         }
     }
 }
